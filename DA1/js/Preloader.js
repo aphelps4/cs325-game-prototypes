@@ -20,6 +20,9 @@ GameStates.makePreloader = function( game ) {
             //	What that does is automatically crop the sprite from 0 to full-width
             //	as the files below are loaded in.
             game.load.setPreloadSprite(preloadBar);
+			
+			//	Title menu assets
+			game.load.image('titleScreen', 'assets/titleScreen.png');
     
             //	Here we load the rest of the assets our game needs.
             //	As this is just a Project Template I've not provided these assets, swap them for your own.
@@ -29,11 +32,22 @@ GameStates.makePreloader = function( game ) {
             //	+ lots of other required assets here
             game.load.image( 'logo', 'assets/phaser.png' );
 			
+			//	Dungeon assets
 			game.load.spritesheet('overWorldWolf', 'assets/overWorldWolf.png', 156, 156);
+			
 			//	Load assets for Phaser Grid Movement example
 			game.load.image('tiles', 'assets/drawtiles-spaced-trees-large.png');
 			game.load.image('car', 'assets/car90.png');
 			game.load.tilemap('map', 'assets/grid.csv', null, Phaser.Tilemap.CSV);
+			
+			//	Battle assets
+			game.load.image('battleBackground', 'assets/battleBackground.png');
+			game.load.spritesheet('fightMenu', 'assets/fightMenu.png', 200, 200);
+			game.load.atlas('attackButton', 'assets/attackButton.png', 'assets/attackButton.json');
+			game.load.spritesheet('portraitBackground', 'assets/portraitBackground.png', 156, 190);
+			game.load.spritesheet('portraitFrame', 'assets/portraitFrame.png', 156, 190);
+			game.load.spritesheet('portraitWolf', 'assets/portraitWolf.png', 156, 190);
+			game.load.spritesheet('portraitRabbit', 'assets/portraitRabbit.png', 156, 190);
         },
     
         create: function () {
