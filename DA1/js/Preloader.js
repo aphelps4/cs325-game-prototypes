@@ -28,8 +28,10 @@ GameStates.makePreloader = function( game ) {
             game.load.audio('titleMusic', ['assets/Poppers and Prosecco.mp3']);
             //	+ lots of other required assets here
             game.load.image( 'logo', 'assets/phaser.png' );
+			
+			game.load.spritesheet('overWorldWolf', 'assets/overWorldWolf.png', 156, 156);
 			//	Load assets for Phaser Grid Movement example
-			game.load.image('tiles', 'assets/drawtiles-spaced.png');
+			game.load.image('tiles', 'assets/drawtiles-spaced-trees-large.png');
 			game.load.image('car', 'assets/car90.png');
 			game.load.tilemap('map', 'assets/grid.csv', null, Phaser.Tilemap.CSV);
         },

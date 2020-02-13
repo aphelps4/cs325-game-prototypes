@@ -6,6 +6,7 @@ GameStates.makeGame = function( game, shared ) {
 	var map = null;
 	var tileset = null;
 	var layer = null;
+	var tileSize = 200;
 	
 	var player = null;
 	
@@ -53,13 +54,26 @@ GameStates.makeGame = function( game, shared ) {
             //	bouncy.inputEnabled = true;
             //	bouncy.events.onInputDown.add( function() { quitGame(); }, this );
 			
-			//	code for Phaser grid movement example
-			map = game.add.tilemap('map', 32, 32);
-			tileset = map.addTilesetImage('tiles', null, 32, 32, 1, 2);
-			layer = map.createLayer(0)
+			//	Change the background color to look grassy
+			game.stage.backgroundColor = "0x4BC421"
 			
-			player = game.add.image(32+16, 32+16, 'car');
+			//	code for Phaser grid movement example
+			map = game.add.tilemap('map', tileSize, tileSize);
+			tileset = map.addTilesetImage('tiles', null, tileSize, tileSize);
+			layer = map.createLayer(0);
+			layer.resizeWorld();
+			
+			//	player = game.add.image(32+16, 32+16, 'car');
+			//player = game.add.sprite(32+16, 32+16, 'car', 0);
+			player = game.add.sprite(tileSize+100, tileSize+100, 'overWorldWolf', 0);
+			//	player.animations.add for making animations
+			//	Make the player the same size as the tiles
+			player.height = tileSize;
+			player.width = tileSize;
 			player.anchor.setTo(0.5, 0.5);
+			
+			game.camera.follow(player);
+			console.log(game.camera);
 			
 			//	Phaser.Input.Keyboard.JustDown for when you want just one press registered
 			cursors = game.input.keyboard.createCursorKeys();
@@ -81,7 +95,7 @@ GameStates.makeGame = function( game, shared ) {
 			if (cursors.left.isDown){
 				
 				//	Get the tile to the left of the player and check the tilemap to see if it is a valid space
-				var tile = map.getTileWorldXY(player.x - 32, player.y);
+				var tile = map.getTileWorldXY(player.x - tileSize, player.y);
 				
 				//	changing the way the player is facing; could possibly change sprite if animation supports it
 				player.angle = 180;
@@ -92,7 +106,7 @@ GameStates.makeGame = function( game, shared ) {
 				}
 				else{
 					if (moveTimer >= pause){
-						player.x -= 32;
+						player.x -= tileSize;
 						//	player has moved so prevent them from moving again for a short while
 						moveTimer = 0;
 					}
@@ -104,16 +118,17 @@ GameStates.makeGame = function( game, shared ) {
 			if (cursors.right.isDown){
 				
 				//	Get the tile to the right of the player and check the tilemap to see if it is a valid space
-				var tile = map.getTileWorldXY(player.x + 32, player.y);
+				var tile = map.getTileWorldXY(player.x + tileSize, player.y);
 				
 				player.angle = 0;
+				game.camera.x += 200;
 				
 				if (tile.index === 2){
 					//	Blocked
 				}
 				else{
 					if (moveTimer >= pause){
-						player.x += 32;
+						player.x += tileSize;
 						moveTimer = 0;
 					}
 				}
@@ -124,7 +139,7 @@ GameStates.makeGame = function( game, shared ) {
 			if (cursors.up.isDown){
 				
 				//	Get the tile to the top of the player and check the tilemap to see if it is a valid space
-				var tile = map.getTileWorldXY(player.x, player.y - 32);
+				var tile = map.getTileWorldXY(player.x, player.y - tileSize);
 				
 				player.angle = -90;
 				
@@ -133,7 +148,7 @@ GameStates.makeGame = function( game, shared ) {
 				}
 				else{
 					if (moveTimer >= pause){
-						player.y -= 32;
+						player.y -= tileSize;
 						moveTimer = 0;
 					}
 				}
@@ -144,7 +159,7 @@ GameStates.makeGame = function( game, shared ) {
 			if (cursors.down.isDown){
 				
 				//	Get the tile to the bottom of the player and check the tilemap to see if it is a valid space
-				var tile = map.getTileWorldXY(player.x, player.y + 32);
+				var tile = map.getTileWorldXY(player.x, player.y + tileSize);
 				
 				player.angle = 90;
 				
@@ -153,7 +168,7 @@ GameStates.makeGame = function( game, shared ) {
 				}
 				else{
 					if (moveTimer >= pause){
-						player.y += 32;
+						player.y += tileSize;
 						moveTimer = 0;
 					}
 				}
