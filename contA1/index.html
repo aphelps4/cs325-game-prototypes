@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Phaser Basic Project Template</title>
+	<script src="js/phaser.min.js"></script>
+	<!-- Boot.js must come first since it creates the BasicGame object
+	that stores all the states. -->
+	<script src="js/Boot.js"></script>
+	<script src="js/Preloader.js"></script>
+	<script src="js/MainMenu.js"></script>
+	<script src="js/Game.js"></script>
+	<!-- main.js must come last since it references the other ones. -->
+	<script src="js/main.js"></script>
+
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+
+</head>
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Eternal Forest</h2>
+
+<ul>
+<li><strong>Originality:</strong>
+It is a dungeon crawler that will let you catch the enemies and use them (eventually).
+</li>
+
+<li><strong>Technical Merit:</strong>
+It has random encounters and it has the ability to randomly build the battles so they can have a varying amount of enemies.
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+I learned that we were not required to use Phaser 3 so I went back to the original plan of using Phaser 2.
+Phaser has a lot of functions nested with objects created through other functions so I constantly had to have windows up with information as I programmed.
+I ended up doing a lot less than I wanted (i.e. enemies have no health and can not attack the player (who also has no health)) to accomplish but I have a better understanding of Phaser now.
+</li>
+
+<li><strong>Prototype Assets:</strong>
+Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
+<ul>
+<li>Loading screen: borrowed from template provided</li>
+<li>Button: borrowed from template provided</li>
+<li>Grid movement: Phaser example <a href="http://phaser.io/examples/v3/view/game-objects/tilemap/static/grid-movement">Grid movement</a></li>
+<li>Everything else: self-made</li>
+</ul>
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+Etrian Odyssey
+<ul>
+<li>The code for this example is adapted from the <a href="http://phaser.io/examples/v3/view/game-objects/tilemap/static/grid-movement">Phaser Grid Movement Project Template</a></li>
+</ul>
+</li>
+
+<li><strong>High Concept:</strong>
+Move through a dungeon and fight any monsters that block your way in turn-based combat.
+</li>
+
+<li><strong>Theme:</strong>
+N/A.
+</li>
+
+<li><strong>Mandated Variety:</strong>
+This game receives input from the arrow keys and the mouse.
+The game generates random numbers when determining how many enemies the player will face and whether the player will be ambushed by enemies when moving.
+The genre of the game is top-down dungeon crawler.
+The play style I used was moving around the area to summon monsters to fight.
+</li>
+
+<li><strong>Prototype Goal:</strong>
+Grid based movement and turn-based combat.
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+I want players to be curious about what they will see in the forest. I want them to be excited to find new characters.
+</li>
+
+<li><strong>Gameplay:</strong>
+When in the dungeon, you use your arrow keys to move around the grid that makes up the world. Occasionally, a monster will pop up and the player will have to fight them in turn based combat where they select their actions and the target by clicking.
+Future: The players will have a hub where they can go to and take a break between wandering the dungeon. They can use items they found in the dungeon to craft things that will help on their journey. Players will also be able to catch the monsters in the forest once they have a capture item. Players can use this item to build their team with any enemy they are capable of catching in the woods. An auto-map feature will also be included so players can see where they are and where they have been at any time when pausing the game.
+Once there is a hub for the players to go back to so they can heal their characters, everything will have health and be capable of fighting.
+</li>
+
+<li><strong>Strategies:</strong>
+Drawing a map of the dungeon will be helpful for players to know where they have been to before in the forest.
+</li>
+
+<li><strong>Story/Setting/Premise:</strong>
+The premise is that there is a mysterious forest that prevents humans from entering with a magical barrier. The main character discovers that familiars do not count as humans and so sends their familiar wolf in to explore the dungeon, bring back treasures, and gather new information about the forest.
+</li>
+
+<li><strong>Target Audience:</strong>
+Eventually, I want to make it so there are a lot of choices for the player when building their party so the target audience would be players that like managing the characters they control and finding new combinations of teams.
+Currently, there is no difficulty to the game so the target audience would be people that want to experience a grid-based game with ease.
+</li>
+
+<li><strong>Play Time:</strong>
+5 minutes.
+</li>
+
+</ul>
+</div>
+</body>
+</html>
