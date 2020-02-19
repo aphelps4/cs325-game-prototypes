@@ -5,6 +5,7 @@ GameStates.makeGame = function( game, shared ) {
     var bouncy = null;
 	
 	var player = null;
+	var walkspeed = 3;
 	
 	var floor1 = null;
 	var ground = null;
@@ -58,11 +59,13 @@ GameStates.makeGame = function( game, shared ) {
 			//	Physics for player
 			game.physics.enable(player, Phaser.Physics.ARCADE);
 			player.body.gravity.y = 100;
+			player.body.collideWorldBounds = true;
 			
 			//	Environment
 			floor1 = game.add.tilemap('floor1', 100, 100);
 			ground = floor1.addTilesetImage('ground', null, 100, 100);
 			layer = floor1.createLayer(0);
+			floor1.setCollision(1, true);
 			layer.resizeWorld();
 			
 			//	Input
@@ -80,12 +83,12 @@ GameStates.makeGame = function( game, shared ) {
             // new trajectory.
             bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
 			
-			//should be in create
-			//ground = new layer from tiles
-			//ground.setCollision(tile number range)
 			//keep in update
 			//game.physics.arcade.collide(this, this.game_state.layers.collision);
 			//physics.collide(player, ground, somefunc)
+			//game.physics.arcade.collideWorldBounds
+			
+			game.physics.arcade.collide(player, layer);
 			
 			if (cursors.left.isDown){
 				//	Left has been pressed, make player move and update animation
@@ -95,6 +98,7 @@ GameStates.makeGame = function( game, shared ) {
 					player.scale.x *= -1;
 				}
 				player.play('leftright');
+				player.x -= walkspeed;
 			}
 			else if (cursors.right.isDown){
 				//	Right has been pressed, make player move and update animation
@@ -104,6 +108,7 @@ GameStates.makeGame = function( game, shared ) {
 					player.scale.x *= -1;
 				}
 				player.play('leftright');
+				player.x += walkspeed;
 			}
 			else if (cursors.up.isDown){
 				//	Up has been pressed, make the player jump and update animation
