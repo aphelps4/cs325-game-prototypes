@@ -4,6 +4,12 @@ GameStates.makeGame = function( game, shared ) {
     // Create your own variables.
     var bouncy = null;
 	
+	var player = null;
+	
+	var floor1 = null;
+	var ground = null;
+	var layer = null;
+	
 	var cursors = null;
     
     function quitGame() {
@@ -43,6 +49,22 @@ GameStates.makeGame = function( game, shared ) {
             bouncy.inputEnabled = true;
             bouncy.events.onInputDown.add( function() { quitGame(); }, this );
 			
+			//	Creates the player
+			player = game.add.sprite(40, 32, 'MC', 0);
+			player.animations.add('still', [0]);
+			player.animations.add('leftright', [1,2,3,0], 5, true);
+			player.anchor.setTo(0.5, 0.5);
+			
+			//	Physics for player
+			game.physics.enable(player, Phaser.Physics.ARCADE);
+			player.body.gravity.y = 100;
+			
+			//	Environment
+			floor1 = game.add.tilemap('floor1', 100, 100);
+			ground = floor1.addTilesetImage('ground', null, 100, 100);
+			layer = floor1.createLayer(0);
+			layer.resizeWorld();
+			
 			//	Input
 			cursors = game.input.keyboard.createCursorKeys();
         },
@@ -58,15 +80,38 @@ GameStates.makeGame = function( game, shared ) {
             // new trajectory.
             bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
 			
+			//should be in create
+			//ground = new layer from tiles
+			//ground.setCollision(tile number range)
+			//keep in update
+			//game.physics.arcade.collide(this, this.game_state.layers.collision);
+			//physics.collide(player, ground, somefunc)
+			
 			if (cursors.left.isDown){
 				//	Left has been pressed, make player move and update animation
+				if (player.scale.x > 0){
+					//	When scale is greater than 0, it is original direction which was right
+					//	Multiply by -1 to flip to left
+					player.scale.x *= -1;
+				}
+				player.play('leftright');
 			}
 			else if (cursors.right.isDown){
 				//	Right has been pressed, make player move and update animation
+				if (player.scale.x < 0){
+					//	When scale is less than 0, it is opposite of original direction
+					//	Multiply by -1 to flip to right
+					player.scale.x *= -1;
+				}
+				player.play('leftright');
 			}
 			else if (cursors.up.isDown){
 				//	Up has been pressed, make the player jump and update animation
 				//	Might want to disable the ability for left and right animation to trigger (but maybe not movement)
+			}
+			else{
+				//	No buttons are being pressed so reset animation to player staying still
+				player.play('still');
 			}
         }
     };

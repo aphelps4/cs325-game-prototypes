@@ -30,10 +30,11 @@ GameStates.makePreloader = function( game ) {
             game.load.image( 'logo', 'assets/phaser.png' );
 			
 			//	Main character
-			game.load.spritesheet('MC', 'assets/mainCharacterWalk.png', 12, 32);
+			game.load.spritesheet('MC', 'assets/mainCharacterWalk.png', 60, 160);
 			
 			//	Area
 			game.load.image('ground', 'assets/floorTile.png');
+			game.load.tilemap('floor1', 'assets/floor1.csv', null, Phaser.Tilemap.CSV);
         },
     
         create: function () {
