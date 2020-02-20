@@ -23,9 +23,9 @@ GameStates.makePreloader = function( game ) {
     
             //	Here we load the rest of the assets our game needs.
             //	As this is just a Project Template I've not provided these assets, swap them for your own.
-            game.load.image('titlePage', 'assets/title.jpg');
             game.load.atlas('playButton', 'assets/play_button.png', 'assets/play_button.json');
-            game.load.audio('titleMusic', ['assets/Poppers and Prosecco.mp3']);
+			
+			game.load.audio('gameMusic', ['assets/Passage.wav']);
 			
 			//	Main character
 			game.load.spritesheet('MC', 'assets/mainCharacterWalk.png', 60, 160);
@@ -35,6 +35,18 @@ GameStates.makePreloader = function( game ) {
 			game.load.tilemap('floor1', 'assets/floor1.csv', null, Phaser.Tilemap.CSV);
 			game.load.image('portal', 'assets/portal.png');
 			game.load.image('upArrowPrompt', 'assets/upArrowPrompt.png');
+			game.load.image('fog', 'assets/fog.png');
+			game.load.image('light', 'assets/light.png');
+			game.load.image('end', 'assets/endScreen.png');
+			game.load.image('begin', 'assets/beginScreen.png');
+			
+			//	Puzzle
+			game.load.spritesheet('card1', 'assets/card1.png', 75, 100);
+			game.load.spritesheet('card2', 'assets/card2.png', 75, 100);
+			game.load.spritesheet('card3', 'assets/card3.png', 75, 100);
+			game.load.spritesheet('card4', 'assets/card4.png', 75, 100);
+			game.load.spritesheet('card5', 'assets/card5.png', 75, 100);
+			game.load.spritesheet('cardFinal', 'assets/cardFinal.png', 75, 100);
         },
     
         create: function () {
@@ -55,7 +67,7 @@ GameStates.makePreloader = function( game ) {
             //	If you don't have any music in your game then put the game.state.start line into the create function and delete
             //	the update function completely.
             
-            if (game.cache.isSoundDecoded('titleMusic') && ready == false)
+            if (game.cache.isSoundDecoded('gameMusic') && ready == false)
             {
                 ready = true;
                 game.state.start('MainMenu');
