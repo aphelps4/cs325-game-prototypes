@@ -26,8 +26,6 @@ GameStates.makePreloader = function( game ) {
             game.load.image('titlePage', 'assets/title.jpg');
             game.load.atlas('playButton', 'assets/play_button.png', 'assets/play_button.json');
             game.load.audio('titleMusic', ['assets/Poppers and Prosecco.mp3']);
-            //	+ lots of other required assets here
-            game.load.image( 'logo', 'assets/phaser.png' );
 			
 			//	Main character
 			game.load.spritesheet('MC', 'assets/mainCharacterWalk.png', 60, 160);
@@ -35,6 +33,8 @@ GameStates.makePreloader = function( game ) {
 			//	Area
 			game.load.image('ground', 'assets/floorTile.png');
 			game.load.tilemap('floor1', 'assets/floor1.csv', null, Phaser.Tilemap.CSV);
+			game.load.image('portal', 'assets/portal.png');
+			game.load.image('upArrowPrompt', 'assets/upArrowPrompt.png');
         },
     
         create: function () {
