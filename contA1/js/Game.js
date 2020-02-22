@@ -267,7 +267,7 @@ GameStates.makeGame = function( game, shared ) {
 			}
 			
 			//	Right
-			if (cursors.right.isDown){
+			if (cursors.right.isDown && canMove){
 				//	Get the tile to the right of the player and check the tilemap to see if it is a valid space
 				var tile = map.getTileWorldXY(player.x + tileSize, player.y);
 				
