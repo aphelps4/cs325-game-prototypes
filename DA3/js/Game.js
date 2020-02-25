@@ -3,6 +3,9 @@
 GameStates.makeGame = function( game, shared ) {
     // Create your own variables.
     var bouncy = null;
+	
+	var cannon = null;
+	var shoot = null;
     
     function quitGame() {
 
@@ -22,14 +25,16 @@ GameStates.makeGame = function( game, shared ) {
             
             // Create a sprite at the center of the screen using the 'logo' image.
             bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
+			//	Make the bouncy object invisible for now and delete later
+			bouncy.visible = false;
             // Anchor the sprite at its center, as opposed to its top-left corner.
             // so it will be truly centered.
             bouncy.anchor.setTo( 0.5, 0.5 );
             
             // Turn on the arcade physics engine for this sprite.
-            game.physics.enable( bouncy, Phaser.Physics.ARCADE );
+            //game.physics.enable( bouncy, Phaser.Physics.ARCADE );
             // Make it bounce off of the world bounds.
-            bouncy.body.collideWorldBounds = true;
+            //bouncy.body.collideWorldBounds = true;
             
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
@@ -40,6 +45,9 @@ GameStates.makeGame = function( game, shared ) {
             // When you click on the sprite, you go back to the MainMenu.
             bouncy.inputEnabled = true;
             bouncy.events.onInputDown.add( function() { quitGame(); }, this );
+			
+			cannon = game.add.sprite(60, 540, 'cannon');
+			cannon.anchor.setTo(0.5, 0.5);
         },
     
         update: function () {
@@ -54,7 +62,15 @@ GameStates.makeGame = function( game, shared ) {
             //bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
 			
 			//	Rotates the bouncy object to follow the pointer
-			bouncy.rotation = game.physics.arcade.angleToPointer(bouncy, game.input.activePointer);
+			shared.rotateToMouse(cannon, 8);
+			
+			if (game.input.activePointer.justPressed(30)){
+				//	Only allow one action per click
+				shoot = shared.shoot(cannon, 'cat1');
+			}
+			if(shoot != null){
+				//console.log(shoot.body.velocity);
+			}
         }
     };
 };
