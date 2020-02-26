@@ -14,3 +14,7 @@ If you have [`node.js`](http://nodejs.org/), you can easily install (`npm instal
 then enter the directory and run a local HTTP server (`http-server`).
 Once you have your local server running, browse to it using Chrome:
 most likely [http://localhost:8000/](http://localhost:8000/) or [http://localhost:8080/](http://localhost:8080/).
+
+Below is the link to Angela's games. Feel free to check it out:
+
+[https://aphelps4.github.io/cs325-game-prototypes/](https://aphelps4.github.io/cs325-game-prototypes/)
