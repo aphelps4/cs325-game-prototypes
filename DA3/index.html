@@ -29,7 +29,7 @@ body
 <body>
 <div id="game"></div>
 <div id="readme">
-<h2>Your game title</h2>
+<h2>Cat Cafe</h2>
 
 <ul>
 <li><strong>Originality:</strong>
@@ -38,12 +38,17 @@ What is original about your game?
 
 <li><strong>Technical Merit:</strong>
 What is interesting about your game technology?
-Using the shared object created in main for shared functions.
+<ul>
+<li>Using the shared object created in main for shared functions.</li>
+<li>Made cats move based on angle shot from cannon. (Possibly want to make them shoot based on mouse distance from cannon as well)</li>
+<li>Beds are placed randomly in four sections of the area.</li>
+</ul>
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
 What did you learn from this prototype?
 What was the easiest or hardest part of making it?
+I finally learned to put functions in the shared object in main instead of just copy-pasting them in every state that uses them. I also tried to make the functions generic so they are easily useable for any needs I may have from them.
 </li>
 
 <li><strong>Prototype Assets:</strong>
@@ -54,18 +59,18 @@ Did you make your prototype assets from scratch? Did you borrow them? Cite your 
 <li>Button: Phaser example <a href="https://phaser.io/examples/v2/buttons/action-on-click">Action On Click</a></li>
 <li>Bouncing Phaser image: <a href="https://phaser.io/download/logo">Phaser logo</a></li>
 <li>Music: "Poppers and Prosecco" Kevin MacLeod (<a href="incompetech.com">incompetech.com</a>). Licensed under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons: By Attribution 3.0 License</a></li>
+<li>Cat meows were downloaded as a public domain sound: <a href="http://www.orangefreesounds.com/cat-meow-sound-effect/">Cat Meows</a></li>
+<li>Images and sprites: self-made through paint.net</li>
 </ul>
 </li>
 
 <li><strong>Prototype Closest Other Game:</strong>
 Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.
-<ul>
-<li>The code for this example is adapted from the <a href="https://github.com/photonstorm/phaser/tree/v2.6.2/resources/Project%20Templates/Basic">Phaser Basic Project Template</a></li>
-</ul>
+Possibly angry birds?
 </li>
 
 <li><strong>High Concept:</strong>
-A one-sentence summary of your game.
+The player must use their mouse to aim and shoot their cats into the beds spread around the cafe in order to turn their cafe into a cat cafe.
 </li>
 
 <li><strong>Theme:</strong>
@@ -78,7 +83,7 @@ input: mouse
 </li>
 
 <li><strong>Prototype Goal:</strong>
-What game mechanic is this prototype evaluating?
+This prototype is evaluating launching objects in an area with gravity and the feel of that play style.
 </li>
 
 <li><strong>Player Experience Goals:</strong>
@@ -86,23 +91,22 @@ Players should be able to pick up this game easily but still have a fun time pla
 </li>
 
 <li><strong>Gameplay:</strong>
-A paragraph describing the actions the player can perform, the system dynamics, and the core mechanic. Include a concise explanation of the prototype’s inputs and their expected effects (how to play). You can also describe game play that is not in the prototype. You may include mock-up images for parts of the game not in the prototype.
-Use the mouse to aim and shoot cats into cat beds.
+Move the mouse to aim the cannon and click to shoot cats into cat beds.
 </li>
 
 <li><strong>Strategies:</strong>
-What player strategies do you expect will be effective at playing this game?
+Players can shoot towards beds that are closer to the cannon to safely get a feel of the physics in this game.
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
 A paragraph about the world your game is set in and who the characters are. What makes the game world and its occupants unique and interesting? Do the tokens represent something? If the game has a backstory, mention it here. If the game is abstract, then say so.
 How will the dramatic tension interact with the gameplay tension?
 A person with a lot of cats heard that their favorite celebrity was sighted in the area. They devise a plan to open a cat cafe with all their cats in an attempt to attract the celebrity because they heard that cat cafes were trendy.
-The player must quickly set up their cafe by shooting the cats into the beds spread around the area.
+The player quickly sets up their cafe by shooting the cats into the beds spread around the area.
 </li>
 
 <li><strong>Target Audience:</strong>
-A single sentence that describes the demographic you're trying to reach.
+This game will be targeted at a more casual audience of all ages.
 </li>
 
 <li><strong>Play Time:</strong>

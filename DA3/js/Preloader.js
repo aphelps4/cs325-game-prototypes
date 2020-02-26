@@ -29,8 +29,10 @@ GameStates.makePreloader = function( game ) {
             //	+ lots of other required assets here
             game.load.image( 'logo', 'assets/phaser.png' );
 			
+			game.load.image('cafeBackground', 'assets/cafeBackground.png');
 			game.load.image('cannon', 'assets/cannon.png');
 			game.load.image('cat1', 'assets/cat1.png');
+			game.load.spritesheet('catBed', 'assets/catBed.png', 80, 60);
         },
     
         create: function () {

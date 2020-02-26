@@ -4,8 +4,11 @@ GameStates.makeGame = function( game, shared ) {
     // Create your own variables.
     var bouncy = null;
 	
+	var background = null;
+	
 	var cannon = null;
 	var shoot = null;
+	var beds = null;
     
     function quitGame() {
 
@@ -46,8 +49,13 @@ GameStates.makeGame = function( game, shared ) {
             bouncy.inputEnabled = true;
             bouncy.events.onInputDown.add( function() { quitGame(); }, this );
 			
+			background = game.add.sprite(0, 0, 'cafeBackground');
+			
 			cannon = game.add.sprite(60, 540, 'cannon');
 			cannon.anchor.setTo(0.5, 0.5);
+			
+			beds = game.add.group();
+			shared.makeBeds(beds, 'catBed', 100, 50, 100, 2, game.world.width, game.world.height, 1);
         },
     
         update: function () {
