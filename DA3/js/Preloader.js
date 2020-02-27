@@ -22,7 +22,7 @@ GameStates.makePreloader = function( game ) {
     
             //	+ lots of other required assets here
 			
-			game.load.audio('Cat', ['assets/cat.wav']);
+			game.load.audio('Cat', ['assets/Cat.wav']);
 			game.load.audio('meow1', ['assets/meow1.wav']);
 			game.load.audio('meow2', ['assets/meow2.wav']);
 			game.load.audio('meow3', ['assets/meow3.wav']);
