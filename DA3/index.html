@@ -9,7 +9,7 @@
 	<script src="js/Boot.js"></script>
 	<script src="js/Preloader.js"></script>
 	<script src="js/MainMenu.js"></script>
-	<script src="js/Game.js"></script>
+	<script src="js/Floor1.js"></script>
 	<!-- main.js must come last since it references the other ones. -->
 	<script src="js/main.js"></script>
 
@@ -33,7 +33,7 @@ body
 
 <ul>
 <li><strong>Originality:</strong>
-What is original about your game?
+Once you launch your cats, you no longer have any control over where they land.
 </li>
 
 <li><strong>Technical Merit:</strong>
@@ -46,9 +46,7 @@ What is interesting about your game technology?
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
-What did you learn from this prototype?
-What was the easiest or hardest part of making it?
-I finally learned to put functions in the shared object in main instead of just copy-pasting them in every state that uses them. I also tried to make the functions generic so they are easily useable for any needs I may have from them.
+I finally learned to put functions in the shared object in main instead of just copy-pasting them in every state that uses them. I also tried to make the functions generic so they are easily useable for any needs I may have from them. Unfortunately, I wasted a lot of time trying to figure out how to rotate a body just to find out that I can not access the physics type that would let me do that.
 </li>
 
 <li><strong>Prototype Assets:</strong>
@@ -65,8 +63,7 @@ Did you make your prototype assets from scratch? Did you borrow them? Cite your 
 </li>
 
 <li><strong>Prototype Closest Other Game:</strong>
-Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.
-Possibly angry birds?
+Angry Birds
 </li>
 
 <li><strong>High Concept:</strong>
@@ -78,8 +75,12 @@ Person with lots and lots of cats and celebrity sighting.
 </li>
 
 <li><strong>Mandated Variety:</strong>
-State which input, randomness, genre, and play style you used in this prototype.
-input: mouse
+<ul>
+<li>Input: indirect, mouse</li>
+<li>Randomness: random</li>
+<li>Play styles: Achiever, Joker</li>
+<li>Genres: Shooter</li>
+</ul>
 </li>
 
 <li><strong>Prototype Goal:</strong>
@@ -99,8 +100,6 @@ Players can shoot towards beds that are closer to the cannon to safely get a fee
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
-A paragraph about the world your game is set in and who the characters are. What makes the game world and its occupants unique and interesting? Do the tokens represent something? If the game has a backstory, mention it here. If the game is abstract, then say so.
-How will the dramatic tension interact with the gameplay tension?
 A person with a lot of cats heard that their favorite celebrity was sighted in the area. They devise a plan to open a cat cafe with all their cats in an attempt to attract the celebrity because they heard that cat cafes were trendy.
 The player quickly sets up their cafe by shooting the cats into the beds spread around the area.
 </li>
@@ -110,7 +109,7 @@ This game will be targeted at a more casual audience of all ages.
 </li>
 
 <li><strong>Play Time:</strong>
-How long does your game take to play?
+5 minutes.
 </li>
 
 </ul>

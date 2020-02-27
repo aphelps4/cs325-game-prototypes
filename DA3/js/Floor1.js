@@ -1,6 +1,6 @@
 "use strict";
 
-GameStates.makeGame = function( game, shared ) {
+GameStates.makeFloor1 = function( game, shared ) {
     // Create your own variables.
     var bouncy = null;
 	
@@ -61,6 +61,7 @@ GameStates.makeGame = function( game, shared ) {
 			cat = game.add.sprite(-100, -100, 'cat1');
 			cat.anchor.setTo(0.5, 0.5);
 			game.physics.enable(cat, Phaser.Physics.ARCADE);
+			cat.takeOne = false;
 			catHitBox = game.add.sprite(20, 0, 'catHitBox');
 			catHitBox.anchor.setTo(0.5, 0.5);
 			game.physics.enable(catHitBox, Phaser.Physics.ARCADE);
@@ -86,8 +87,9 @@ GameStates.makeGame = function( game, shared ) {
 			
 			if (game.input.activePointer.justPressed(30) && shared.objectOut(catHitBox)){
 				//	Only allow one action per click
-				console.log("test click");
 				shared.shoot(cannon, cat);
+				cat.updateTransform();
+				cat.takeOne = true;
 			}
 			
 			beds.forEach(shared.catInBed, this, true, catHitBox, cat);
@@ -97,9 +99,15 @@ GameStates.makeGame = function( game, shared ) {
 				shared.score += lives;
 			}
 			
-			if (shared.objectOut(catHitBox) == false){
-				//	Cat is in bounds
-				//console.log("in");
+			if (shared.objectOut(catHitBox) && cat.takeOne){
+				//	Cat has fallen out of bounds and it is time to take one from lives
+				lives -= 1;
+				cat.takeOne = false;
+				console.log(lives);
+			}
+			
+			if (lives == 0){
+				//	Game over
 			}
         }
     };
