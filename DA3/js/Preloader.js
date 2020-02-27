@@ -62,6 +62,7 @@ GameStates.makePreloader = function( game ) {
             if (game.cache.isSoundDecoded('Cat') && game.cache.isSoundDecoded('meow1') && game.cache.isSoundDecoded('meow2') && game.cache.isSoundDecoded('meow3') && ready == false)
             {
                 ready = true;
+				game.sound.mute = true;
                 game.state.start('MainMenu');
             }
     
