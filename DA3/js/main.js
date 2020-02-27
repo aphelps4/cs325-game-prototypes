@@ -9,24 +9,33 @@ window.onload = function() {
 	//	Add the States your game has.
 	//	You don't have to do this in the html, it could be done in your Boot state too, but for simplicity I'll keep it here.
 	
-	// An object for shared variables, so that them main menu can show
+	// An object for shared variables, so that the main menu can show
 	// the high score if you want.
 	var shared = {
-		rotateToMouse : function(object, mouse){
+		
+		score : 0,
+		
+		rotateToMouse : function(object){
+			//	Rotate the object to follow the mouse
+			
 			object.rotation = game.physics.arcade.angleToPointer(object, game.input.activePointer);
 		},
-		shoot : function(shooter, objectToShoot){
+		
+		shoot : function(shooter, toShoot){
+			//	shooter is the object that will be shooting something
+			//	toShoot is the object that will be shot from the shooter
+			
 			var velocity = 500;
-			var toShoot = game.add.sprite(shooter.x, shooter.y, objectToShoot);
-			toShoot.anchor.setTo(0.5, 0.5);
+			toShoot.x = shooter.x;
+			toShoot.y = shooter.y;
 			toShoot.angle = shooter.angle;
-			game.physics.enable(toShoot, Phaser.Physics.ARCADE);
 			toShoot.allowGravity = true;
 			toShoot.body.velocity.x = Math.cos(toShoot.rotation) * velocity;
 			toShoot.body.velocity.y = Math.sin(toShoot.rotation) * velocity;
 			toShoot.body.gravity.y = 250;
 			return toShoot;
 		},
+		
 		makeBeds : function(group, beds, outBuffer, inBuffer, fromBottom, lines, xsize, ysize, chooseLines){
 			//	group is the group where the objects are placed, beds is the object string for placement,
 			//	outBuffer is the buffer from the edges of the screen, inBuffer is buffer from middle
@@ -64,6 +73,7 @@ window.onload = function() {
 					//	Create the object we are putting in place
 					var child = game.add.sprite(0, ysize, beds, 0);
 					child.anchor.setTo(0, 1);
+					game.physics.enable(child, Phaser.Physics.ARCADE);
 					
 					//	Calculate the availble placement for x
 					var xStart = 0;
@@ -96,6 +106,46 @@ window.onload = function() {
 					group.addChild(child);
 				}
 			}
+		},
+		
+		catInBed : function(child, shotObject, parent){
+			//	child is a child of a group that should check for overlap
+			//	shotObject is the object that should overlap child
+			
+			//	child is the object we are checking with overlap with shotObject
+			if (child.frame == 0){
+				//	Bed is empty when frame is zero
+				if (game.physics.arcade.collide(shotObject, child)){
+					//	shotObject is over the goal
+					child.frame = 1;
+					//	Make the parent (which the hit box "shotObject" is attached to) stop moving
+					parent.body.gravity.y = 0;
+					parent.body.velocity.x = 0;
+					parent.body.velocity.y = 0;
+					parent.x = -100;
+					parent.y = -100;
+				}
+			}
+		},
+		
+		objectOut : function(shotObject){
+			//Check if the shotObject is out of bounds everywhere except up
+			var leftXBounds = 0 - (shotObject.width/2);
+			var rightXBounds = game.world.width + (shotObject.width/2);
+			var downYBounds = game.world.height + (shotObject.height/2);
+			if (shotObject.worldPosition.x < leftXBounds){
+				//	Out of bounds left
+				return true;
+			}
+			if (shotObject.worldPosition.x > rightXBounds){
+				//	Out of bounds right
+				return true;
+			}
+			if (shotObject.worldPosition.y > downYBounds){
+				//	Out of bounds down
+				return true;
+			}
+			return false;
 		}
 	};
 	

@@ -6,9 +6,13 @@ GameStates.makeGame = function( game, shared ) {
 	
 	var background = null;
 	
+	var cat = null;
+	var catHitBox = null;
 	var cannon = null;
 	var shoot = null;
 	var beds = null;
+	
+	var lives = 3;
     
     function quitGame() {
 
@@ -51,11 +55,19 @@ GameStates.makeGame = function( game, shared ) {
 			
 			background = game.add.sprite(0, 0, 'cafeBackground');
 			
-			cannon = game.add.sprite(60, 540, 'cannon');
-			cannon.anchor.setTo(0.5, 0.5);
-			
 			beds = game.add.group();
 			shared.makeBeds(beds, 'catBed', 100, 50, 100, 2, game.world.width, game.world.height, 1);
+			
+			cat = game.add.sprite(-100, -100, 'cat1');
+			cat.anchor.setTo(0.5, 0.5);
+			game.physics.enable(cat, Phaser.Physics.ARCADE);
+			catHitBox = game.add.sprite(20, 0, 'catHitBox');
+			catHitBox.anchor.setTo(0.5, 0.5);
+			game.physics.enable(catHitBox, Phaser.Physics.ARCADE);
+			catHitBox.body.setCircle(30);
+			cat.addChild(catHitBox);
+			cannon = game.add.sprite(60, 540, 'cannon');
+			cannon.anchor.setTo(0.5, 0.5);
         },
     
         update: function () {
@@ -70,14 +82,24 @@ GameStates.makeGame = function( game, shared ) {
             //bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
 			
 			//	Rotates the bouncy object to follow the pointer
-			shared.rotateToMouse(cannon, 8);
+			shared.rotateToMouse(cannon);
 			
-			if (game.input.activePointer.justPressed(30)){
+			if (game.input.activePointer.justPressed(30) && shared.objectOut(catHitBox)){
 				//	Only allow one action per click
-				shoot = shared.shoot(cannon, 'cat1');
+				console.log("test click");
+				shared.shoot(cannon, cat);
 			}
-			if(shoot != null){
-				//console.log(shoot.body.velocity);
+			
+			beds.forEach(shared.catInBed, this, true, catHitBox, cat);
+			
+			if (beds.checkAll('frame', 1)){
+				//	All beds have been filled and we should move to the next room
+				shared.score += lives;
+			}
+			
+			if (shared.objectOut(catHitBox) == false){
+				//	Cat is in bounds
+				//console.log("in");
 			}
         }
     };
