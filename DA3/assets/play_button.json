@@ -2,34 +2,34 @@
 
 {
 	"filename": "down",
-	"frame": {"x":0,"y":142,"w":193,"h":71},
+	"frame": {"x":0,"y":332,"w":158,"h":166},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":193,"h":71},
-	"sourceSize": {"w":193,"h":71}
+	"spriteSourceSize": {"x":0,"y":0,"w":158,"h":166},
+	"sourceSize": {"w":158,"h":166}
 },
 {
 	"filename": "out",
-	"frame": {"x":0,"y":71,"w":193,"h":71},
+	"frame": {"x":0,"y":0,"w":158,"h":166},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":193,"h":71},
-	"sourceSize": {"w":193,"h":71}
+	"spriteSourceSize": {"x":0,"y":0,"w":158,"h":166},
+	"sourceSize": {"w":158,"h":166}
 },
 {
 	"filename": "over",
-	"frame": {"x":0,"y":0,"w":193,"h":71},
+	"frame": {"x":0,"y":166,"w":158,"h":166},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":193,"h":71},
-	"sourceSize": {"w":193,"h":71}
+	"spriteSourceSize": {"x":0,"y":0,"w":158,"h":166},
+	"sourceSize": {"w":158,"h":166}
 }],
 "meta": {
 	"app": "http://www.texturepacker.com",
 	"version": "1.0",
 	"image": "button_texture_atlas.png",
 	"format": "RGBA8888",
-	"size": {"w":193,"h":213},
+	"size": {"w":158,"h":498},
 	"scale": "1",
 	"smartupdate": "$TexturePacker:SmartUpdate:94df81041404a206a4e9cd597a1e3495$"
 }

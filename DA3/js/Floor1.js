@@ -2,9 +2,7 @@
 
 GameStates.makeFloor1 = function( game, shared ) {
     // Create your own variables.
-    var bouncy = null;
-	
-	var background = null;
+    var background = null;
 	
 	var cat = null;
 	var catHitBox = null;
@@ -12,7 +10,9 @@ GameStates.makeFloor1 = function( game, shared ) {
 	var shoot = null;
 	var beds = null;
 	
-	var lives = 3;
+	var catHead = null;
+	var text = null;
+	var lives = null;
     
     function quitGame() {
 
@@ -29,29 +29,6 @@ GameStates.makeFloor1 = function( game, shared ) {
         create: function () {
     
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
-            
-            // Create a sprite at the center of the screen using the 'logo' image.
-            bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
-			//	Make the bouncy object invisible for now and delete later
-			bouncy.visible = false;
-            // Anchor the sprite at its center, as opposed to its top-left corner.
-            // so it will be truly centered.
-            bouncy.anchor.setTo( 0.5, 0.5 );
-            
-            // Turn on the arcade physics engine for this sprite.
-            //game.physics.enable( bouncy, Phaser.Physics.ARCADE );
-            // Make it bounce off of the world bounds.
-            //bouncy.body.collideWorldBounds = true;
-            
-            // Add some text using a CSS style.
-            // Center it in X, and position its top 15 pixels from the top of the world.
-            var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
-            var text = game.add.text( game.world.centerX, 15, "Build something amazing.", style );
-            text.anchor.setTo( 0.5, 0.0 );
-            
-            // When you click on the sprite, you go back to the MainMenu.
-            bouncy.inputEnabled = true;
-            bouncy.events.onInputDown.add( function() { quitGame(); }, this );
 			
 			background = game.add.sprite(0, 0, 'cafeBackground');
 			
@@ -69,6 +46,11 @@ GameStates.makeFloor1 = function( game, shared ) {
 			cat.addChild(catHitBox);
 			cannon = game.add.sprite(60, 540, 'cannon');
 			cannon.anchor.setTo(0.5, 0.5);
+			
+			catHead = game.add.sprite(0, 0, 'catHead');
+			lives = 3;
+			var style = { font: "25px Verdana", fill: "#000000", align: "center" };
+            text = game.add.text( 30, 0, lives.toString(), style );
         },
     
         update: function () {
@@ -89,6 +71,9 @@ GameStates.makeFloor1 = function( game, shared ) {
 				//	Only allow one action per click
 				shared.shoot(cannon, cat);
 				cat.updateTransform();
+				var rand = game.rnd.between(0, 2);
+				var sound = game.add.audio(shared.meows[rand]);
+				sound.play();
 				cat.takeOne = true;
 			}
 			
@@ -97,17 +82,19 @@ GameStates.makeFloor1 = function( game, shared ) {
 			if (beds.checkAll('frame', 1)){
 				//	All beds have been filled and we should move to the next room
 				shared.score += lives;
+				game.state.start('Floor2');
 			}
 			
 			if (shared.objectOut(catHitBox) && cat.takeOne){
 				//	Cat has fallen out of bounds and it is time to take one from lives
 				lives -= 1;
+				text.text = lives.toString();
 				cat.takeOne = false;
-				console.log(lives);
 			}
 			
 			if (lives == 0){
 				//	Game over
+				game.state.start('Lose');
 			}
         }
     };
