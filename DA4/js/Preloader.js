@@ -31,6 +31,12 @@ GameStates.makePreloader = function( game ) {
 			//	Player
 			game.load.image('placeholder', 'assets/placeholder.png');
 			
+			//	Menus
+			game.load.spritesheet('buttonBackground', 'assets/buttonBackground.png', 80, 80);
+			game.load.spritesheet('menu', 'assets/menu.png', 80, 80);
+			game.load.spritesheet('place', 'assets/place.png', 80, 80);
+			game.load.spritesheet('build', 'assets/build.png', 80, 80);
+			
 			//	Assets for the home area
 			game.load.image('tiles', 'assets/homeTiles.png');
 			game.load.tilemap('homeMap', 'assets/home.csv', null, Phaser.Tilemap.CSV);

@@ -31,6 +31,51 @@ window.onload = function() {
 				//	Go down
 				player.y += moveSpeed;
 			}
+		},
+		
+		cursorOver : function (button){
+			
+			if (button.input.pointerOver()){
+				button.background.frame = 1;
+			}
+			else{
+				button.background.frame = 0;
+			}
+		},
+		
+		openMenu : function (menuObj, menuList, buttonBackground){
+			
+			menuObj.frame = 1;
+			var listLength = menuList.length;
+			var startx = menuObj.cameraOffset.x;
+			var starty = menuObj.cameraOffset.y;
+			var growth = menuObj.height;
+			var newObjects = [];
+			
+			for (var i = 1; i <= listLength; i++){
+				var background = game.add.sprite(startx, starty - (i * growth), buttonBackground, 0);
+				var button = game.add.sprite(startx, starty - (i * growth), menuList[i - 1], 0);
+				button.inputEnabled = true;
+				button.background = background;
+				button.fixedToCamera = true;
+				button.background.fixedToCamera = true;
+				newObjects.push(button);
+			}
+			
+			return newObjects;
+		},
+		
+		closeMenu : function (menuObj, menuObjList){
+			
+			menuObj.frame = 0;
+			
+			var listLen = menuObjList.length;
+			for (var i = 0; i < listLen; i++){
+				menuObjList[i].background.destroy();
+				menuObjList[i].destroy();
+			}
+			
+			return null;
 		}
 		
 	};

@@ -11,6 +11,11 @@ GameStates.makeGame = function( game, shared ) {
 	var player = null;
 	var moveSpeed = 3;
 	
+	var menu = null;
+	var menuList = ['place', 'build'];
+	var menuObjList = null;
+	var tools = null;
+	
 	var cursors = null;
     
     function quitGame() {
@@ -45,6 +50,16 @@ GameStates.makeGame = function( game, shared ) {
 			player = game.add.sprite(150, 150, 'placeholder', 0);
 			player.anchor.setTo(0.5, 0.5);
 			
+			//	Set up menus
+			var background = game.add.sprite(0, 520, 'buttonBackground', 0);
+			menu = game.add.sprite(0, 520, 'menu', 0);
+			menu.inputEnabled = true;
+			menu.background = background;
+			menu.background.fixedToCamera = true;
+			menu.fixedToCamera = true;
+			//background = game.add.sprite(720, 520, 'buttonBackground', 0);
+			//tools = game.add.sprite(0, 720, 'tools', 0);
+			
 			game.camera.follow(player);
 			
 			cursors = game.input.keyboard.createCursorKeys();
@@ -61,6 +76,30 @@ GameStates.makeGame = function( game, shared ) {
             // new trajectory.
 			
 			shared.move(cursors, player, moveSpeed);
+			
+			shared.cursorOver(menu)
+			
+			if (menuObjList != null){
+				var len = menuObjList.length;
+				
+				for (var i = 0; i < len; i++){
+					shared.cursorOver(menuObjList[i]);
+				}
+			}
+			
+			if (game.input.activePointer.justPressed(30)){
+				if (menu.input.pointerOver()){
+					//	Open the main menu
+					if (menu.frame == 0){
+						//	Menu has not been opened yet
+						menuObjList = shared.openMenu(menu, menuList, 'buttonBackground');
+					}
+					else{
+						//	Menu was already open
+						menuObjList = shared.closeMenu(menu, menuObjList);
+					}
+				}
+			}
         }
     };
 };
