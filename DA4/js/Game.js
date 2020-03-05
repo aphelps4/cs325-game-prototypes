@@ -8,7 +8,6 @@ GameStates.makeGame = function( game, shared ) {
 	var tileset = null;
 	var layer = null;
 	
-	var player = null;
 	var moveSpeed = 3;
 	
 	var menu = null;
@@ -58,8 +57,8 @@ GameStates.makeGame = function( game, shared ) {
 			layer.resizeWorld();
 			
 			//	Add player
-			player = game.add.sprite(150, 150, 'placeholder', 0);
-			player.anchor.setTo(0.5, 0.5);
+			shared.player.sprite = game.add.sprite(150, 150, 'placeholder', 0);
+			shared.player.sprite.anchor.setTo(0.5, 0.5);
 			
 			//	Set up menus
 			var background = game.add.sprite(0, 520, 'buttonBackground', 0);
@@ -71,7 +70,7 @@ GameStates.makeGame = function( game, shared ) {
 			//background = game.add.sprite(720, 520, 'buttonBackground', 0);
 			//tools = game.add.sprite(0, 720, 'tools', 0);
 			
-			game.camera.follow(player);
+			game.camera.follow(shared.player.sprite);
 			
 			cursors = game.input.keyboard.createCursorKeys();
         },
@@ -86,7 +85,7 @@ GameStates.makeGame = function( game, shared ) {
             // This function returns the rotation angle that makes it visually match its
             // new trajectory.
 			
-			shared.move(cursors, player, moveSpeed);
+			shared.move(cursors, shared.player.sprite, moveSpeed);
 			
 			shared.cursorOver(menu)
 			
@@ -130,13 +129,6 @@ GameStates.makeGame = function( game, shared ) {
 				}
 				if (inven != null){
 					//	An inventory menu is open
-					if (inven.exit.input.pointerOver()){
-						//	Check for the player hitting the close button
-						inven.destroy();
-						inven = null;
-						menu.visible = true;
-						menu.background.visible = true;
-					}
 					for (var i = 0; i < inven.buttons.length; i++){
 						if (inven.buttons[i].image != null){
 							//	Some buttons have no object with them
@@ -144,6 +136,13 @@ GameStates.makeGame = function( game, shared ) {
 								inven.buttons[i].func(inven.buttons[i].image);
 							}
 						}
+					}
+					if (inven.exit.input.pointerOver()){
+						//	Check for the player hitting the close button
+						inven.destroy();
+						inven = null;
+						menu.visible = true;
+						menu.background.visible = true;
 					}
 				}
 			}

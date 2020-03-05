@@ -13,6 +13,10 @@ window.onload = function() {
 	// the high score if you want.
 	var shared = {
 		
+		player : {
+			sprite : null
+		},
+		
 		move : function(cursors, player, moveSpeed){
 			
 			if (cursors.left.isDown){
