@@ -22,6 +22,8 @@ GameStates.makeGame = function( game, shared ) {
 	var place = null;
 	var objectStore = null;
 	
+	var buildInfo = null;
+	
 	var cursors = null;
 	
 	var placeFunc = function(object, text){
@@ -34,14 +36,40 @@ GameStates.makeGame = function( game, shared ) {
 			hoverCt++;
 			
 			if (game.input.activePointer.justPressed(30)){
-				//	Button was clicked
+				//	Button was clicked therefore the player will start placing their object
 				if (object.object.storeNum > 0){
 					//	The player has at least one object to place
 					place = object.object.name;
 					place = game.add.sprite(0, 0, place);
 					objectStore = object.object;
 					inven.destroy();
+					inven = null;
 				}
+			}
+		}
+	}
+	
+	var buildFunc = function(object, text){
+		//	object is the object that is being built
+		//	text is the text that shows the amount of any object when a player hovers over it
+		
+		var need = object.object.resourcesNeed;
+		var have = shared.player.resources;
+		
+		if (object.image.input.pointerOver()){
+			//	Player is hovering over a button
+			text.text = "Amount: " + object.object.storeNum;
+			hoverCt++;
+			if (buildInfo == null){
+				buildInfo = shared.openInv(400, 80, 720, 520, 0, 0, null, shared.player.objList);
+			}
+			
+			buildInfo.text.text = "Resources needed: " + need.toString() + "\nResources have: " + have.toString();
+			
+			if (game.input.activePointer.justPressed(30)){
+				//	Button was clicked therefore object was created
+				object.object.storeNum++;
+				shared.player.resources -= need;
 			}
 		}
 	}
@@ -102,7 +130,7 @@ GameStates.makeGame = function( game, shared ) {
             // This function returns the rotation angle that makes it visually match its
             // new trajectory.
 			
-			shared.move(cursors, shared.player.sprite, moveSpeed, map);
+			var checkFirst = shared.move(cursors, shared.player.sprite, moveSpeed, map, inven);
 			
 			shared.cursorOver(menu)
 			
@@ -125,7 +153,7 @@ GameStates.makeGame = function( game, shared ) {
 					}
 					else if (menuObjList[1].input.pointerOver()){
 						//	The build option was pressed
-						inven = shared.openInv(80, 80, 400, 520, 4, 6, 'exit', shared.player.objList, placeFunc);
+						inven = shared.openInv(80, 80, 400, 520, 4, 6, 'exit', shared.player.objList, buildFunc);
 						menuObjList = shared.closeMenu(menu, menuObjList);
 						menu.visible = false;
 						menu.background.visible = false;
@@ -179,15 +207,31 @@ GameStates.makeGame = function( game, shared ) {
 				hoverCt = 0;
 				//for (var i = 0; i < inven.buttons.length; i++){
 				for (var i = 0; i < shared.player.objList.length; i++){
-					if (inven.buttons[i].object != null){
-						//	Some buttons have no object with them
-						inven.buttons[i].func(inven.buttons[i], inven.text);
+					if (inven != null){
+						if (inven.buttons[i] != null){
+							if (inven.buttons[i].object != null){
+								//	Some buttons have no object with them
+								inven.buttons[i].func(inven.buttons[i], inven.text);
+							}
+						}
 					}
 				}
 				
 				if (hoverCt == 0){
 					//	Player is not over any objects
 					inven.text.text = "Amount: ";
+				}
+			}
+			else{
+				inven = checkFirst;
+			}
+			
+			if (buildInfo != null){
+				//	We are displaying build info
+				if (hoverCt == 0){
+					//	Player is not over any objects
+					buildInfo.destroy();
+					buildInfo = null;
 				}
 			}
 			

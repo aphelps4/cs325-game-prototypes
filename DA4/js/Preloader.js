@@ -13,8 +13,8 @@ GameStates.makePreloader = function( game ) {
     
             //	These are the assets we loaded in Boot.js
             //	A nice sparkly background and a loading progress bar
-            background = game.add.sprite(0, 0, 'preloaderBackground');
-            preloadBar = game.add.sprite(300, 400, 'preloaderBar');
+			game.stage.backgroundColor = 0x7F5B39;
+            preloadBar = game.add.sprite(300, 400, 'loading');
     
             //	This sets the preloadBar sprite as a loader sprite.
             //	What that does is automatically crop the sprite from 0 to full-width
@@ -23,13 +23,13 @@ GameStates.makePreloader = function( game ) {
     
             //	Here we load the rest of the assets our game needs.
             //	As this is just a Project Template I've not provided these assets, swap them for your own.
-            game.load.image('titlePage', 'assets/title.jpg');
-            game.load.atlas('playButton', 'assets/play_button.png', 'assets/play_button.json');
-            game.load.audio('titleMusic', ['assets/Poppers and Prosecco.mp3']);
             //	+ lots of other required assets here
+			game.load.atlas('start', 'assets/start.png', 'assets/play_button.json');
+			game.load.audio('MasterCrafter', ['assets/MasterCrafter.wav']);
+			game.load.image('title', 'assets/title.png');
 			
 			//	Player
-			game.load.image('placeholder', 'assets/placeholder.png');
+			game.load.image('player', 'assets/player.png');
 			
 			//	Menus
 			game.load.spritesheet('buttonBackground', 'assets/buttonBackground.png', 80, 80);
@@ -37,9 +37,12 @@ GameStates.makePreloader = function( game ) {
 			game.load.spritesheet('place', 'assets/place.png', 80, 80);
 			game.load.spritesheet('build', 'assets/build.png', 80, 80);
 			game.load.spritesheet('exit', 'assets/exit.png', 30, 30);
+			game.load.spritesheet('comingSoon', 'assets/comingSoon.png', 800, 600);
 			
 			//	Objects
 			game.load.spritesheet('table', 'assets/table.png', 100, 100);
+			game.load.spritesheet('chair', 'assets/chair.png', 100, 100);
+			game.load.spritesheet('chicken', 'assets/chicken.png', 100, 100);
 			
 			//	Assets for the home area
 			game.load.image('tiles', 'assets/homeTiles.png');
@@ -64,7 +67,7 @@ GameStates.makePreloader = function( game ) {
             //	If you don't have any music in your game then put the game.state.start line into the create function and delete
             //	the update function completely.
             
-            if (game.cache.isSoundDecoded('titleMusic') && ready == false)
+            if (game.cache.isSoundDecoded('MasterCrafter') && ready == false)
             {
                 ready = true;
                 game.state.start('MainMenu');

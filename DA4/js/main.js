@@ -11,6 +11,10 @@ window.onload = function() {
 	
 	// An object for shared variables, so that them main menu can show
 	// the high score if you want.
+	var emptyFunc = function(){
+		//	Empty function for the coming soon menu
+	}
+	
 	var shared = {
 		
 		player : {
@@ -19,14 +23,16 @@ window.onload = function() {
 			
 			map : [],
 			
-			objList : []
+			objList : [],
+			
+			resources : 0
 		},
 		
 		initializeGame : function(){
 			//	Sets up the game
 			
 			//	Add player
-			this.player.sprite = game.add.sprite(150, 150, 'placeholder', 0);
+			this.player.sprite = game.add.sprite(150, 150, 'player', 0);
 			this.player.sprite.anchor.setTo(0.5, 0.5);
 			
 			//	Set up the map
@@ -40,14 +46,16 @@ window.onload = function() {
 				this.player.map.push(lis);
 			}
 			
-			//	Return the buildable/placeable objects
-			//var objList = [];
-			//objList.push(this.makeObject('table', 1, 1, 3));
-			//return objList;
-			this.player.objList.push(this.makeObject('table', 1, 1, 3));
+			//	Set up the buildable/placeable objects
+			this.player.objList.push(this.makeObject('table', 1, 1, 1, 3));
+			this.player.objList.push(this.makeObject('chair', 1, 1, 1, 2));
+			this.player.objList.push(this.makeObject('chicken', 1, 1, 0, 5));
+			
+			//	Give the player some resources to begin with
+			this.player.resources = 12;
 		},
 		
-		makeObject : function(name, xSize, ySize, storeNum){
+		makeObject : function(name, xSize, ySize, storeNum, resourcesNeed){
 			//	Makes a placeable object with necessary variables
 			//	name is the String that is used to make the sprite
 			//	xSize and ySize are to know how much space it will take on the map
@@ -61,18 +69,21 @@ window.onload = function() {
 				
 				ySize : ySize,
 				
-				storeNum : storeNum
+				storeNum : storeNum,
+				
+				resourcesNeed : resourcesNeed
 			}
 			
 			return object;
 		},
 		
-		move : function(cursors, player, moveSpeed, map){
+		move : function(cursors, player, moveSpeed, map, inven){
 			//	Moves an object when receiving player input
 			//	cursors is the cursors the player can press
 			//	player is the sprite that the player can move
 			//	moveSpeed is how quickly that sprite should move
 			//	map is the tilemap that the player navigates through
+			//	inven is for checking if an inventory menu is up
 			
 			if (cursors.left.isDown){
 				var tileLeft = map.getTileWorldXY((player.x - (player.width/2)) - moveSpeed, player.y);
@@ -86,6 +97,13 @@ window.onload = function() {
 				if (tileRight != null && !(tileRight.index <= 6)){
 					//	Go right
 					player.x += moveSpeed;
+				}
+				if (tileRight == null || tileRight.index == 9){
+					//	Player is attempting to leave
+					if (inven == null){
+						//	Only make a menu if one does not exist
+						return this.openInv(80, 80, 720, 520, 1, 1, 'exit', [this.makeObject('comingSoon', 1, 1, 0)], emptyFunc);
+					}
 				}
 			}
 			else if (cursors.up.isDown){
@@ -102,6 +120,7 @@ window.onload = function() {
 					player.y += moveSpeed;
 				}
 			}
+			return null;
 		},
 		
 		cursorOver : function (button){
@@ -180,7 +199,9 @@ window.onload = function() {
 				destroy : function(){
 					this.background.destroy();
 					this.text.destroy();
-					this.exit.destroy();
+					if (this.exit != null){
+						this.exit.destroy();
+					}
 					for (var i = 0; i < this.buttons.length; i++){
 						if (this.buttons[i].image != null){
 							this.buttons[i].image.destroy();

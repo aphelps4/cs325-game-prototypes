@@ -3,12 +3,10 @@
 GameStates.makeMainMenu = function( game, shared ) {
 
 	var music = null;
+	var title = null;
 	var playButton = null;
     
     function startGame(pointer) {
-
-        //	Ok, the Play Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
-        music.stop();
 
         //	And start the actual game
         game.state.start('Game');
@@ -23,12 +21,13 @@ GameStates.makeMainMenu = function( game, shared ) {
             //	Here all we're doing is playing some music and adding a picture and button
             //	Naturally I expect you to do something significantly better :)
     
-            music = game.add.audio('titleMusic');
+            music = game.add.audio('MasterCrafter');
+			music.loop = true;
             music.play();
+			
+			title = game.add.image(200, 50, 'title');
     
-            game.add.sprite(0, 0, 'titlePage');
-    
-            playButton = game.add.button( 303, 400, 'playButton', startGame, null, 'over', 'out', 'down');
+            playButton = game.add.button( 303, 400, 'start', startGame, null, 'over', 'out', 'down');
     
         },
     
