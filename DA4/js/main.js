@@ -76,6 +76,102 @@ window.onload = function() {
 			}
 			
 			return null;
+		},
+		
+		openInv : function (startx, starty, endx, endy, column, row, exitString, objList, func){
+			//	startx and starty are the beginning of the area for the created inventory menu
+			//	endx and endy are the end of the area for the created inventory menu
+			//	column and row are for the size of the matrix when placing objects from objList
+			//	exitString is the string necessary to make the button that allows the player to close the menu
+			//	objList is the list of objects that should be created for viewing/selecting
+			//	func is the function that should be executed for the function
+			
+			var inven = {
+				//	Create an object that will hold all info for creating a menu
+				
+				background : null,
+				
+				exit : null,
+				
+				buttons : [],
+				
+				destroy : function(){
+					this.background.destroy();
+					this.exit.destroy();
+					for (var i = 0; i < this.buttons.length; i++){
+						if (this.buttons[i].image != null){
+							this.buttons[i].image.destroy();
+						}
+					}
+				}
+			}
+			
+			var graphics = game.add.graphics();
+			graphics.fixedToCamera = true;
+			graphics.beginFill(0x969FBA);
+			
+			//	Create background for inventory menu
+			inven.background = graphics.drawRoundedRect(startx, starty, endx - startx, endy - starty, 9);
+			
+			//	Create a button for closing the menu
+			inven.exit = game.add.sprite(0, 0, exitString);
+			var exitBuff = inven.exit.width/2;
+			inven.exit.x = endx - (exitBuff * 3);
+			inven.exit.y = starty + exitBuff;
+			inven.exit.fixedToCamera = true;
+			inven.exit.inputEnabled = true;
+			
+			//	Create all the button objects in the menu
+			var forCalc = game.add.sprite(0, 0, objList[0]);	//	Not actually used
+			var objWidth = forCalc.width/2;
+			var overallWidth = column * objWidth;
+			var objHeight = forCalc.height/2;
+			var overallHeight = row * objHeight;
+			var objStartX = game.camera.view.halfWidth - (overallWidth/2);
+			var objStartY = game.camera.view.halfHeight - (overallHeight/2);
+			var it = 0;
+			
+			//	Done with calculations, free this
+			forCalc.destroy();
+			
+			graphics.endFill();
+			graphics.lineStyle(2, 0x000000);
+			
+			for (var i = 0; i < row; i++){
+				//	Move through the rows
+				for (var j = 0; j < column; j++){
+					//	Move through the columns
+					var button = {
+						
+						image : null,
+						
+						frame: null,
+						
+						func : null
+					}
+					var placex = objStartX + (j * objWidth);
+					var placey = objStartY + (i * objHeight);
+					
+					if (it < objList.length){
+						button.image = game.add.sprite(placex, placey, objList[it]);
+						button.image.width = objWidth;
+						button.image.height = objHeight;
+						button.image.fixedToCamera = true;
+						button.image.inputEnabled = true;
+					}
+					
+					button.frame = graphics.drawRect(placex, placey, objWidth, objHeight);
+					
+					button.func = func;
+					
+					inven.buttons.push(button);
+					it++;
+				}
+			}
+			
+			graphics.endFill();
+			
+			return inven;
 		}
 		
 	};

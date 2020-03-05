@@ -36,6 +36,10 @@ GameStates.makePreloader = function( game ) {
 			game.load.spritesheet('menu', 'assets/menu.png', 80, 80);
 			game.load.spritesheet('place', 'assets/place.png', 80, 80);
 			game.load.spritesheet('build', 'assets/build.png', 80, 80);
+			game.load.spritesheet('exit', 'assets/exit.png', 30, 30);
+			
+			//	Objects
+			game.load.spritesheet('table', 'assets/table.png', 100, 100);
 			
 			//	Assets for the home area
 			game.load.image('tiles', 'assets/homeTiles.png');

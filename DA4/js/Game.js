@@ -15,8 +15,19 @@ GameStates.makeGame = function( game, shared ) {
 	var menuList = ['place', 'build'];
 	var menuObjList = null;
 	var tools = null;
+	var inven = null;
+	var objList = ['table'];
+	
+	var place = null;
 	
 	var cursors = null;
+	
+	var placeFunc = function(object){
+		//	object is the object that is being placed
+		
+		place = object;
+		inven.destroy();
+	}
     
     function quitGame() {
 
@@ -80,14 +91,32 @@ GameStates.makeGame = function( game, shared ) {
 			shared.cursorOver(menu)
 			
 			if (menuObjList != null){
+				//	Menu has been opened
+				
 				var len = menuObjList.length;
 				
 				for (var i = 0; i < len; i++){
 					shared.cursorOver(menuObjList[i]);
 				}
+				
+				if (game.input.activePointer.justPressed(30)){
+					if (menuObjList[0].input.pointerOver()){
+						//	The place option was pressed
+						inven = shared.openInv(80, 80, 720, 520, 10, 6, 'exit', objList, placeFunc);
+						menuObjList = shared.closeMenu(menu, menuObjList);
+						menu.visible = false;
+						menu.background.visible = false;
+						console.log(inven);
+					}
+					else if (menuObjList[1].input.pointerOver()){
+						//	The build option was pressed
+					}
+				}
 			}
 			
 			if (game.input.activePointer.justPressed(30)){
+				//	Player has clicked, check if there was a valid action
+				
 				if (menu.input.pointerOver()){
 					//	Open the main menu
 					if (menu.frame == 0){
@@ -97,6 +126,24 @@ GameStates.makeGame = function( game, shared ) {
 					else{
 						//	Menu was already open
 						menuObjList = shared.closeMenu(menu, menuObjList);
+					}
+				}
+				if (inven != null){
+					//	An inventory menu is open
+					if (inven.exit.input.pointerOver()){
+						//	Check for the player hitting the close button
+						inven.destroy();
+						inven = null;
+						menu.visible = true;
+						menu.background.visible = true;
+					}
+					for (var i = 0; i < inven.buttons.length; i++){
+						if (inven.buttons[i].image != null){
+							//	Some buttons have no object with them
+							if (inven.buttons[i].image.input.pointerOver()){
+								inven.buttons[i].func(inven.buttons[i].image);
+							}
+						}
 					}
 				}
 			}
