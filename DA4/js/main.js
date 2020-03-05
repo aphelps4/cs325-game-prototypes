@@ -17,10 +17,13 @@ window.onload = function() {
 			
 			sprite : null,
 			
-			map : []
+			map : [],
+			
+			objList : []
 		},
 		
 		initializeGame : function(){
+			//	Sets up the game
 			
 			//	Add player
 			this.player.sprite = game.add.sprite(150, 150, 'placeholder', 0);
@@ -36,6 +39,32 @@ window.onload = function() {
 				}
 				this.player.map.push(lis);
 			}
+			
+			//	Return the buildable/placeable objects
+			//var objList = [];
+			//objList.push(this.makeObject('table', 1, 1, 3));
+			//return objList;
+			this.player.objList.push(this.makeObject('table', 1, 1, 3));
+		},
+		
+		makeObject : function(name, xSize, ySize, storeNum){
+			//	Makes a placeable object with necessary variables
+			//	name is the String that is used to make the sprite
+			//	xSize and ySize are to know how much space it will take on the map
+			//	storeNum is for limited resources purposes
+			
+			var object = {
+				
+				name : name,
+				
+				xSize : xSize,
+				
+				ySize : ySize,
+				
+				storeNum : storeNum
+			}
+			
+			return object;
 		},
 		
 		move : function(cursors, player, moveSpeed, map){
@@ -142,12 +171,15 @@ window.onload = function() {
 				
 				background : null,
 				
+				text : null,
+				
 				exit : null,
 				
 				buttons : [],
 				
 				destroy : function(){
 					this.background.destroy();
+					this.text.destroy();
 					this.exit.destroy();
 					for (var i = 0; i < this.buttons.length; i++){
 						if (this.buttons[i].image != null){
@@ -164,6 +196,10 @@ window.onload = function() {
 			//	Create background for inventory menu
 			inven.background = graphics.drawRoundedRect(startx, starty, endx - startx, endy - starty, 9);
 			
+			var style = { font: "25px Verdana", fill: "#000000", align: "center" };
+			inven.text = game.add.text( startx, starty, "Amount: ", style );
+			inven.text.fixedToCamera = true;
+			
 			//	Create a button for closing the menu
 			inven.exit = game.add.sprite(0, 0, exitString);
 			var exitBuff = inven.exit.width/2;
@@ -173,13 +209,13 @@ window.onload = function() {
 			inven.exit.inputEnabled = true;
 			
 			//	Create all the button objects in the menu
-			var forCalc = game.add.sprite(0, 0, objList[0]);	//	Not actually used
+			var forCalc = game.add.sprite(0, 0, objList[0].name);	//	Not actually used
 			var objWidth = forCalc.width/2;
 			var overallWidth = column * objWidth;
 			var objHeight = forCalc.height/2;
 			var overallHeight = row * objHeight;
-			var objStartX = game.camera.view.halfWidth - (overallWidth/2);
-			var objStartY = game.camera.view.halfHeight - (overallHeight/2);
+			var objStartX = ((endx + startx)/2) - (overallWidth/2);
+			var objStartY = ((endy + starty)/2) - (overallHeight/2);
 			var it = 0;
 			
 			//	Done with calculations, free this
@@ -196,6 +232,8 @@ window.onload = function() {
 						
 						image : null,
 						
+						object : null,
+						
 						frame: null,
 						
 						func : null
@@ -204,12 +242,14 @@ window.onload = function() {
 					var placey = objStartY + (i * objHeight);
 					
 					if (it < objList.length){
-						button.image = game.add.sprite(placex, placey, objList[it]);
+						button.image = game.add.sprite(placex, placey, objList[it].name);
 						button.image.width = objWidth;
 						button.image.height = objHeight;
 						button.image.fixedToCamera = true;
 						button.image.inputEnabled = true;
 					}
+					
+					button.object = objList[it];
 					
 					button.frame = graphics.drawRect(placex, placey, objWidth, objHeight);
 					
@@ -236,7 +276,10 @@ window.onload = function() {
 				//	Exit to other areas and not valid
 				return false;
 			}
-			console.log(tile);
+			if (this.player.map[tile.x - 1][tile.y - 1] != null){
+				//	Object was already there
+				return false;
+			}
 			return true;
 		}
 		

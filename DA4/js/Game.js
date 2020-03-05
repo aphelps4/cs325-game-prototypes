@@ -17,16 +17,33 @@ GameStates.makeGame = function( game, shared ) {
 	var inven = null;
 	var objList = ['table'];
 	
+	var hoverCt = 0;
+	
 	var place = null;
+	var objectStore = null;
 	
 	var cursors = null;
 	
-	var placeFunc = function(object){
+	var placeFunc = function(object, text){
 		//	object is the object that is being placed
+		//	text is the text that shows the amount of any object when a player hovers over it
 		
-		place = object.key;
-		place = game.add.sprite(0, 0, place);
-		inven.destroy();
+		if (object.image.input.pointerOver()){
+			//	Player is hovering over a button
+			text.text = "Amount: " + object.object.storeNum;
+			hoverCt++;
+			
+			if (game.input.activePointer.justPressed(30)){
+				//	Button was clicked
+				if (object.object.storeNum > 0){
+					//	The player has at least one object to place
+					place = object.object.name;
+					place = game.add.sprite(0, 0, place);
+					objectStore = object.object;
+					inven.destroy();
+				}
+			}
+		}
 	}
     
     function quitGame() {
@@ -101,14 +118,17 @@ GameStates.makeGame = function( game, shared ) {
 				if (game.input.activePointer.justPressed(30)){
 					if (menuObjList[0].input.pointerOver()){
 						//	The place option was pressed
-						inven = shared.openInv(80, 80, 720, 520, 10, 6, 'exit', objList, placeFunc);
+						inven = shared.openInv(80, 80, 720, 520, 10, 6, 'exit', shared.player.objList, placeFunc);
 						menuObjList = shared.closeMenu(menu, menuObjList);
 						menu.visible = false;
 						menu.background.visible = false;
-						console.log(inven);
 					}
 					else if (menuObjList[1].input.pointerOver()){
 						//	The build option was pressed
+						inven = shared.openInv(80, 80, 400, 520, 4, 6, 'exit', shared.player.objList, placeFunc);
+						menuObjList = shared.closeMenu(menu, menuObjList);
+						menu.visible = false;
+						menu.background.visible = false;
 					}
 				}
 			}
@@ -134,23 +154,16 @@ GameStates.makeGame = function( game, shared ) {
 					if (shared.checkValidPlace(overTile)){
 						//	Player chose a valid spot
 						shared.player.map[overTile.x - 1][overTile.y - 1] = place;
+						objectStore.storeNum--;
 						place = null;
+						objectStore = null;
 						menu.visible = true;
 						menu.background.visible = true;
-						console.log(shared.player);
 					}
 				}
 				
 				if (inven != null){
 					//	An inventory menu is open
-					for (var i = 0; i < inven.buttons.length; i++){
-						if (inven.buttons[i].image != null){
-							//	Some buttons have no object with them
-							if (inven.buttons[i].image.input.pointerOver()){
-								inven.buttons[i].func(inven.buttons[i].image);
-							}
-						}
-					}
 					if (inven.exit.input.pointerOver()){
 						//	Check for the player hitting the close button
 						inven.destroy();
@@ -158,6 +171,23 @@ GameStates.makeGame = function( game, shared ) {
 						menu.visible = true;
 						menu.background.visible = true;
 					}
+				}
+			}
+			
+			if (inven != null){
+				//Check all the buttons in the inventory menu for input
+				hoverCt = 0;
+				//for (var i = 0; i < inven.buttons.length; i++){
+				for (var i = 0; i < shared.player.objList.length; i++){
+					if (inven.buttons[i].object != null){
+						//	Some buttons have no object with them
+						inven.buttons[i].func(inven.buttons[i], inven.text);
+					}
+				}
+				
+				if (hoverCt == 0){
+					//	Player is not over any objects
+					inven.text.text = "Amount: ";
 				}
 			}
 			
