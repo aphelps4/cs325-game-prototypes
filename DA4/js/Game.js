@@ -24,7 +24,8 @@ GameStates.makeGame = function( game, shared ) {
 	var placeFunc = function(object){
 		//	object is the object that is being placed
 		
-		place = object;
+		place = object.key;
+		place = game.add.sprite(0, 0, place);
 		inven.destroy();
 	}
     
@@ -56,9 +57,8 @@ GameStates.makeGame = function( game, shared ) {
 			layer = map.createLayer(0);
 			layer.resizeWorld();
 			
-			//	Add player
-			shared.player.sprite = game.add.sprite(150, 150, 'placeholder', 0);
-			shared.player.sprite.anchor.setTo(0.5, 0.5);
+			//	Initialize the game
+			shared.initializeGame();
 			
 			//	Set up menus
 			var background = game.add.sprite(0, 520, 'buttonBackground', 0);
@@ -85,7 +85,7 @@ GameStates.makeGame = function( game, shared ) {
             // This function returns the rotation angle that makes it visually match its
             // new trajectory.
 			
-			shared.move(cursors, shared.player.sprite, moveSpeed);
+			shared.move(cursors, shared.player.sprite, moveSpeed, map);
 			
 			shared.cursorOver(menu)
 			
@@ -127,6 +127,20 @@ GameStates.makeGame = function( game, shared ) {
 						menuObjList = shared.closeMenu(menu, menuObjList);
 					}
 				}
+				
+				if (place != null){
+					//	Player has tried to place an object
+					var overTile = map.getTileWorldXY(game.input.activePointer.worldX, game.input.activePointer.worldY);
+					if (shared.checkValidPlace(overTile)){
+						//	Player chose a valid spot
+						shared.player.map[overTile.x - 1][overTile.y - 1] = place;
+						place = null;
+						menu.visible = true;
+						menu.background.visible = true;
+						console.log(shared.player);
+					}
+				}
+				
 				if (inven != null){
 					//	An inventory menu is open
 					for (var i = 0; i < inven.buttons.length; i++){
@@ -145,6 +159,13 @@ GameStates.makeGame = function( game, shared ) {
 						menu.background.visible = true;
 					}
 				}
+			}
+			
+			if (place != null){
+				//	Player is trying to place an object, show them where it will go
+				var overTile = map.getTileWorldXY(game.input.activePointer.worldX, game.input.activePointer.worldY);
+				place.position.x = overTile.worldX;
+				place.position.y = overTile.worldY;
 			}
         }
     };

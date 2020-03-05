@@ -14,30 +14,69 @@ window.onload = function() {
 	var shared = {
 		
 		player : {
-			sprite : null
+			
+			sprite : null,
+			
+			map : []
 		},
 		
-		move : function(cursors, player, moveSpeed){
+		initializeGame : function(){
+			
+			//	Add player
+			this.player.sprite = game.add.sprite(150, 150, 'placeholder', 0);
+			this.player.sprite.anchor.setTo(0.5, 0.5);
+			
+			//	Set up the map
+			for (var i = 0; i < 10; i++){
+				//	Create ten columns (x)
+				var lis = [];
+				for (var j = 0; j < 10; j++){
+					//	Create rows with ten spots (y)
+					lis.push(null);
+				}
+				this.player.map.push(lis);
+			}
+		},
+		
+		move : function(cursors, player, moveSpeed, map){
+			//	Moves an object when receiving player input
+			//	cursors is the cursors the player can press
+			//	player is the sprite that the player can move
+			//	moveSpeed is how quickly that sprite should move
+			//	map is the tilemap that the player navigates through
 			
 			if (cursors.left.isDown){
-				//	Go left
-				player.x -= moveSpeed;
+				var tileLeft = map.getTileWorldXY((player.x - (player.width/2)) - moveSpeed, player.y);
+				if (tileLeft != null && !(tileLeft.index <= 6)){
+					//	Go left
+					player.x -= moveSpeed;
+				}
 			}
 			else if (cursors.right.isDown){
-				//	Go right
-				player.x += moveSpeed;
+				var tileRight = map.getTileWorldXY((player.x + (player.width/2)) + moveSpeed, player.y);
+				if (tileRight != null && !(tileRight.index <= 6)){
+					//	Go right
+					player.x += moveSpeed;
+				}
 			}
 			else if (cursors.up.isDown){
-				//	Go up
-				player.y -= moveSpeed;
+				var tileUp = map.getTileWorldXY(player.x, (player.y - (player.height/2)) - moveSpeed);
+				if (tileUp != null && !(tileUp.index <= 6)){
+					//	Go up
+					player.y -= moveSpeed;
+				}
 			}
 			else if (cursors.down.isDown){
-				//	Go down
-				player.y += moveSpeed;
+				var tileDown = map.getTileWorldXY(player.x, (player.y + (player.height/2)) + moveSpeed);
+				if (tileDown != null && !(tileDown.index <= 6)){
+					//	Go down
+					player.y += moveSpeed;
+				}
 			}
 		},
 		
 		cursorOver : function (button){
+			//	Change the background to show if the cursor is over the button
 			
 			if (button.input.pointerOver()){
 				button.background.frame = 1;
@@ -48,6 +87,10 @@ window.onload = function() {
 		},
 		
 		openMenu : function (menuObj, menuList, buttonBackground){
+			//	Opens a menu that opens upward
+			//	menuObj is the original object the player clicks
+			//	menuList is the list of options that become available
+			//	buttonBackground is the background of each option
 			
 			menuObj.frame = 1;
 			var listLength = menuList.length;
@@ -70,6 +113,9 @@ window.onload = function() {
 		},
 		
 		closeMenu : function (menuObj, menuObjList){
+			//	Closes the menu that opened upwards
+			//	menuObj is the original button that opens the menu options
+			//	menuObjList is the list of menu options that need to be deleted
 			
 			menuObj.frame = 0;
 			
@@ -83,6 +129,7 @@ window.onload = function() {
 		},
 		
 		openInv : function (startx, starty, endx, endy, column, row, exitString, objList, func){
+			//	Opens an inventory window
 			//	startx and starty are the beginning of the area for the created inventory menu
 			//	endx and endy are the end of the area for the created inventory menu
 			//	column and row are for the size of the matrix when placing objects from objList
@@ -176,6 +223,21 @@ window.onload = function() {
 			graphics.endFill();
 			
 			return inven;
+		},
+		
+		checkValidPlace : function(tile){
+			//	Check if the placement is valid or not
+			//	tile is the tile the player has tried to place an object on
+			if (tile.index <= 6){
+				//	World barrier and not valid
+				return false;
+			}
+			if (tile.index >= 8){
+				//	Exit to other areas and not valid
+				return false;
+			}
+			console.log(tile);
+			return true;
 		}
 		
 	};
