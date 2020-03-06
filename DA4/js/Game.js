@@ -67,9 +67,12 @@ GameStates.makeGame = function( game, shared ) {
 			buildInfo.text.text = "Resources needed: " + need.toString() + "\nResources have: " + have.toString();
 			
 			if (game.input.activePointer.justPressed(30)){
-				//	Button was clicked therefore object was created
-				object.object.storeNum++;
-				shared.player.resources -= need;
+				//	Button was clicked therefore attempt to create object
+				if (shared.player.resources >= need){
+					//	Check if player has resources to create the object
+					object.object.storeNum++;
+					shared.player.resources -= need;
+				}
 			}
 		}
 	}
@@ -187,6 +190,8 @@ GameStates.makeGame = function( game, shared ) {
 						objectStore = null;
 						menu.visible = true;
 						menu.background.visible = true;
+						menu.background.bringToTop();
+						menu.bringToTop();
 					}
 				}
 				
