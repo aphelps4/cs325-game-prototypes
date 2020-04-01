@@ -16,16 +16,48 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 		
 		prob : [50, 30, 20]
 		
+	};
+	var rndmLvlData = {
+		amtMin : 1,
+		
+		amtMax : 3,
+		
+		prob : [50, 30, 20]
+		
 	}
 	var plcmntData = {
 		
-		back : 0,
+		back : -100,
 		
-		front : 30,
+		front : -50,
 		
-		width : 180 //	May be wrong, check later
+		width : 100 //	May be wrong, check later
 		
-	}
+	};
+	var availableEnemies = [
+		
+		{
+			name : 'Rabbit',
+			calculateStats : function(lvl){
+				//	Takes the character lvl, calculates the stats on it, and returns an enemy object
+				//	so we can have multiple of the same type of enemy.
+				var object = {
+					name : this.name,
+					lvl : lvl,
+					hp : lvl * 6,
+					str : lvl * 2,
+					mag : lvl,
+					def : lvl,
+					spd : lvl * 3,
+					sprite : null,
+					background : null,
+					frame : null
+				}
+				object.sprite = game.add.sprite(0, 0, 'portraitRabbit', 0);
+				return object
+			}
+		}
+	];
 	
 	var cursors = null;
 	var pointer = null;
@@ -61,7 +93,10 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
     
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
             
-            dungeon.move(cursors, "does not matter: not used", map, tileSize, "not used");
+            if (dungeon.move(cursors, "does not matter: not used", map, tileSize, "not used", 20)){
+				//	Random encounter occurred
+				dungeon.startBattle(rndmAmtData, rndmLvlData, plcmntData, availableEnemies);
+			}
 			
 			dungeon.moveTimer++;
         }

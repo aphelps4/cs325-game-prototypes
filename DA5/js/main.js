@@ -27,6 +27,8 @@ window.onload = function() {
 		
 		portraitFrame : null,
 		
+		enemies : [],
+		
 		pause : 20,
 		
 		moveTimer : 20,
@@ -45,12 +47,14 @@ window.onload = function() {
 			}
 		},
 		
-		move : function(cursors, player, map, tileSize, moveTimer){
+		move : function(cursors, player, map, tileSize, moveTimer, enctrChance){
 			//	Move the player if they are allowed to move
 			//	cursors is the key input from the player
 			//	player is the sprite that the player controls
 			//	map is the current map the player is on
 			//	tileSize is the size of the tiles that make up the map
+			//	enctrChance is the chance of running into enemies
+			//	Return true if the player runs into enemies
 			
 			//	Left
 			if (cursors.left.isDown && this.canMove){
@@ -76,8 +80,9 @@ window.onload = function() {
 							//	20% of encountering an enemy while moving
 							//this.startBattle();
 						//}
-						if (this.randomEncounter(20)){
+						if (this.randomEncounter(enctrChance)){
 							//	Random encounter here
+							return true;
 						}
 					}
 				}
@@ -102,6 +107,10 @@ window.onload = function() {
 							//	20% of encountering an enemy while moving
 							//this.startBattle();
 						//}
+						if (this.randomEncounter(enctrChance)){
+							//	Random encounter here
+							return true;
+						}
 					}
 				}
 				
@@ -126,6 +135,10 @@ window.onload = function() {
 							//	20% of encountering an enemy while moving
 							//this.startBattle();
 						//}
+						if (this.randomEncounter(enctrChance)){
+							//	Random encounter here
+							return true;
+						}
 					}
 				}
 				
@@ -150,10 +163,17 @@ window.onload = function() {
 							//	20% of encountering an enemy while moving
 							//this.startBattle();
 						//}
+						if (this.randomEncounter(enctrChance)){
+							//	Random encounter here
+							return true;
+						}
 					}
 				}
 				
 			}
+			
+			//	Failed all encounter checks
+			return false;
 		},
 		
 		randomEncounter : function(chance){
@@ -169,47 +189,52 @@ window.onload = function() {
 			return false;
 		},
 		
-		startBattle : function(rndmAmtData, rndmLvlData, enemyList){
+		startBattle : function(rndmAmtData, rndmLvlData, plcmntData, availableEnemies){
 			//	Set up the battle for the player
 			//	rndmAmtData contains a list with available enemy amounts along with their probability of happening
 			//	rndmLvlData contains a list of available enemy levels along with their probability of happening
-			//	enemyList contains the enemies that can be generated in the battle
-			this.battleBackground = game.add.sprite(player.x, player.y, 'battleBackground');
+			//	plcmntData contains the data on how to place the enemies
+			//	availableEnemies contains the enemies that can be generated in the battle
+			this.battleBackground = game.add.sprite(this.player.x, this.player.y, 'battleBackground');
 			this.battleBackground.anchor.setTo(0.5, 0.5);
-			
-			//	Makes the portrait and moves it to the corner - fine tune later
-			//	Change this to be the team portraits (possibly in the player objects)
-			this.playerPortrait = game.add.sprite(battleBackground.x, battleBackground.y, 'portraitWolf', 0);
-			this.playerPortrait.anchor.setTo(0.5, 0.5);
-			this.playerPortrait.x = battleBackground.x - 220;
-			this.playerPortrait.y = battleBackground.y + 205;
-			//portraitBackground = game.add.sprite(playerPortrait.x, playerPortrait.y, 'portraitBackground', 0);
-			this.portraitBackground = game.add.button(playerPortrait.x, playerPortrait.y, 'portraitBackground', menu)
-			this.portraitBackground.anchor.setTo(0.5, 0.5);
-			this.portraitBackground.moveDown();
-			this.portraitFrame = game.add.sprite(playerPortrait.x, playerPortrait.y, 'portraitFrame', 0);
-			this.portraitFrame.anchor.setTo(0.5, 0.5);
 			
 			//	Make enemies
 			//var enemyAmount = game.rnd.between(minEnemies, maxEnemies);
-			var enemyAmount = generateEnemyAmount();
-			enemyList.length = enemyAmount;
-			spawnEnemies(enemyAmount);
+			//var enemyAmount = generateEnemyAmount();
+			//enemyList.length = enemyAmount;
+			//spawnEnemies(enemyAmount);
+			this.spawnEnemies(rndmAmtData, rndmLvlData, plcmntData, availableEnemies);
+			
+			//	Makes the portrait and moves it to the corner - fine tune later
+			//	Change this to be the team portraits (possibly in the player objects)
+			this.playerPortrait = game.add.sprite(this.battleBackground.x, this.battleBackground.y, 'portraitWolf', 0);
+			this.playerPortrait.anchor.setTo(0.5, 0.5);
+			this.playerPortrait.x = this.battleBackground.x - 220;
+			this.playerPortrait.y = this.battleBackground.y + 205;
+			//portraitBackground = game.add.sprite(playerPortrait.x, playerPortrait.y, 'portraitBackground', 0);
+			//	Replace random encounter function call with actual menu options later
+			this.portraitBackground = game.add.button(this.playerPortrait.x, this.playerPortrait.y, 'portraitBackground', this.randomEncounter)
+			this.portraitBackground.anchor.setTo(0.5, 0.5);
+			this.portraitBackground.moveDown();
+			this.portraitFrame = game.add.sprite(this.playerPortrait.x, this.playerPortrait.y, 'portraitFrame', 0);
+			this.portraitFrame.anchor.setTo(0.5, 0.5);
 			
 			//	Do not allow the player to move while battling
 			this.canMove = false;
 		},
 		
-		spawnEnemies : function(rndmAmtData, rndmLvlData){
+		spawnEnemies : function(rndmAmtData, rndmLvlData, plcmntData, availableEnemies){
 			//	Create the enemies using the given data
 			//	rndmAmtData is used to determine how many enemies there will be in the battle
 			//	rndmLvlData is used to determine the level of the enemies
+			//	plcmntData is used to determine how to place the enemies on the screen
+			//	availableEnemies is a list of enemy objects that can be found on the current level
 			if ((rndmAmtData.amtMax - rndmAmtData.amtMin + 1) != rndmAmtData.prob.length){
 				//	There are not enough probabilities for the available amounts
 				console.log("Number of probabilities given is not equal to amount of available range");
 				return;
 			}
-			sum = 0;
+			var sum = 0;
 			for (var i = 0; i < (rndmAmtData.prob.length - 1); i++){
 				sum += rndmAmtData.prob[i];
 				if (sum >= 100){
@@ -239,9 +264,22 @@ window.onload = function() {
 			//	Enemy amount has been generated, place enemies
 			//var back = ceil(enemyAmount/2)
 			//var front = floor(enemyAmount/2)
-			console.log(game.width);
+			//	Always start left most in the back (so even in the back odd in front)
+			this.enemies.length = enemyAmount;
 			for (var i = 0; i < enemyAmount; i++){
 				//	Randomly create an enemy from available encounters and place it
+				var choice = game.rnd.between(0, (availableEnemies.length - 1));
+				var enemy = availableEnemies[choice].calculateStats(1);
+				enemy.sprite.x = (this.battleBackground.x - 330) + (plcmntData.width * i);
+				if (i % 2 == 0){
+					//	Place the enemy in the back if they are even
+					enemy.sprite.y = this.battleBackground.y + plcmntData.back;
+				}
+				else{
+					//	Place the enemy in the front if they are odd
+					enemy.sprite.y = this.battleBackground.y + plcmntData.front;
+				}
+				this.enemies[i] = enemy;
 			}
 		}
 	};

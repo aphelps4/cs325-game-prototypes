@@ -31,7 +31,7 @@ GameStates.makeGame = function( game, shared ) {
 		
 		prob : [50, 30, 20]
 		
-	}
+	};
 	var plcmntData = {
 		
 		back : 0,
@@ -40,7 +40,31 @@ GameStates.makeGame = function( game, shared ) {
 		
 		width : 180 //	May be wrong, check later
 		
-	}
+	};
+	var availableEnemies = [
+		
+		{
+			name : 'Rabbit',
+			calculateStats : function(lvl){
+				//	Takes the character lvl, calculates the stats on it, and returns an enemy object
+				//	so we can have multiple of the same type of enemy.
+				var object = {
+					name : this.name,
+					lvl : lvl,
+					hp : lvl * 6,
+					str : lvl * 2,
+					mag : lvl,
+					def : lvl,
+					spd : lvl * 3,
+					sprite : null,
+					background : null,
+					frame : null
+				}
+				sprite = game.add.sprite(0, 0, 'portraitRabbit', 0);
+				return object
+			}
+		}
+	];
 	
 	var cursors = null;
 	var pointer = null;
