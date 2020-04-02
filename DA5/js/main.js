@@ -19,6 +19,10 @@ window.onload = function() {
 		
 		canMove : true,
 		
+		fightMenu : null,
+		
+		attackButton : null,
+		
 		battleBackground : null,
 		
 		playerPortrait : null,
@@ -32,6 +36,12 @@ window.onload = function() {
 		pause : 20,
 		
 		moveTimer : 20,
+		
+		attackPause : 20,
+		
+		attackTimer : 0,
+		
+		waitForFight : false,
 		
 		initializePlayer : function(x, y, sprite){
 			//	Initialize the sprite the player will be controlling
@@ -47,10 +57,9 @@ window.onload = function() {
 			}
 		},
 		
-		move : function(cursors, player, map, tileSize, moveTimer, enctrChance){
+		move : function(cursors, map, tileSize, enctrChance){
 			//	Move the player if they are allowed to move
 			//	cursors is the key input from the player
-			//	player is the sprite that the player controls
 			//	map is the current map the player is on
 			//	tileSize is the size of the tiles that make up the map
 			//	enctrChance is the chance of running into enemies
@@ -213,7 +222,7 @@ window.onload = function() {
 			this.playerPortrait.y = this.battleBackground.y + 205;
 			//portraitBackground = game.add.sprite(playerPortrait.x, playerPortrait.y, 'portraitBackground', 0);
 			//	Replace random encounter function call with actual menu options later
-			this.portraitBackground = game.add.button(this.playerPortrait.x, this.playerPortrait.y, 'portraitBackground', this.randomEncounter)
+			this.portraitBackground = game.add.button(this.playerPortrait.x, this.playerPortrait.y, 'portraitBackground', this.openFightMenu);
 			this.portraitBackground.anchor.setTo(0.5, 0.5);
 			this.portraitBackground.moveDown();
 			this.portraitFrame = game.add.sprite(this.playerPortrait.x, this.playerPortrait.y, 'portraitFrame', 0);
@@ -221,6 +230,7 @@ window.onload = function() {
 			
 			//	Do not allow the player to move while battling
 			this.canMove = false;
+			console.log(this.battleBackground);
 		},
 		
 		spawnEnemies : function(rndmAmtData, rndmLvlData, plcmntData, availableEnemies){
@@ -281,6 +291,32 @@ window.onload = function() {
 				}
 				this.enemies[i] = enemy;
 			}
+		},
+		
+		openFightMenu : function(){
+			//	Open the menu required to fight in battle
+			console.log(dungeon.battleBackground);
+			dungeon.fightMenu = game.add.sprite(dungeon.battleBackground.x, dungeon.battleBackground.y, 'fightMenu', 0);
+			dungeon.fightMenu.anchor.setTo(0.5, 0.5);
+			dungeon.attackButton = game.add.button(dungeon.fightMenu.x, dungeon.fightMenu.y, 'attackButton', dungeon.chooseEnemy, null, 'hover', 'normal', 'click');
+			dungeon.attackButton.anchor.setTo(0.5, 0.5);
+		},
+		
+		closeFightMenu : function(){
+			//	Close the menu required to fight in battle
+			this.fightMenu.destroy();
+			this.attackButton.destroy();
+		},
+		
+		chooseEnemy : function(){
+			//	Choose the enemy to do an action
+			dungeon.closeFightMenu();
+			dungeon.waitForFight = true;
+			for (var i = 0; i < dungeon.enemies.length; i++){
+				//	Allow enemies to receive input
+				dungeon.enemies[i].inputEnabled = true;
+			}
+			dungeon.attackTimer = 0;
 		}
 	};
 	
