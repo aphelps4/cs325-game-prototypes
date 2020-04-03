@@ -11,7 +11,63 @@ window.onload = function() {
 	
 	// An object for shared variables, so that them main menu can show
 	// the high score if you want.
-	var shared = {};
+	var shared = {
+		
+		openMenu : function(x, upy, downy, menuBackground, buttonHeight, xbuffer, ybuffer, data){
+			//	Open a menu in the specified area with the given options in a vertical format
+			//	x will be the left bound where the menu objects are placed
+			//	upy and downy will be used to determine the general area for the options to go
+			//	menuBackground is the background for the menu if it exists, null if it does not
+			//	buttonHeight will be used for calculated how to place menu objects
+			//	xbuffer will be used if the options should be placed away from the edge of a menu background
+			//	ybuffer will be used to determine the space between the options which are being placed vertically
+			//	data will contain an object holding information that holds the options and the functions
+			if (data.menuButtons.length != data.buttonFunctions.length){
+				//	Not enough functions for our buttons
+				console.log("There should be the same amount of functions as there are options.");
+			}
+			var menu = {
+				
+				menuBackground : null,
+				
+				buttons : [],
+				
+				functions : [],
+				
+				destroy : function(){
+					//	Destroys everything in the menu
+					if (this.menuBackground != null){
+						this.menuBackground.destroy();
+					}
+					for (var i = 0; i < this.buttons.length; i++){
+						this.buttons[i].destroy();
+					}
+					this.buttons = [];
+					this.functions = [];
+				}
+				
+			};
+			
+			if (menuBackground != null){
+				menu.menuBackground = game.add.sprite(x, upy, menuBackground, 0);
+			}
+			menu.buttons.length = data.menuButtons.length;
+			menu.functions = data.buttonFunctions;
+			
+			var mul = data.menuButtons.length;
+			var overallHeight = buttonHeight * mul;
+			mul -= 1;	//	Calculate the buffer amount between the options vertically
+			overallHeight = overallHeight + (ybuffer * mul);
+			var yplace = ((upy + downy)/2) - (overallHeight/2);	//	Middle of page then up half the overall height
+			for (var i = 0; i < data.menuButtons.length; i++){
+				//	Add the buttons in their respective places
+				menu.buttons[i] = game.add.button((x + xbuffer), yplace, data.menuButtons[i], menu.functions[i], null, 'hover', 'normal', 'click');
+				yplace += buttonHeight + ybuffer;
+			}
+			return menu;
+		}
+		
+	};
 	
 	var dungeon = {
 		
@@ -19,9 +75,36 @@ window.onload = function() {
 		
 		canMove : true,
 		
-		fightMenu : null,
-		
-		attackButton : null,
+		battleData : {
+			
+			battleBackground : null,
+			
+			menu : null,
+			
+			menuButtons : [
+			
+				'attackButton'
+			
+			],
+			
+			buttonFunctions : [
+			
+				function(){
+					//	This is the function for the attack button
+					if (dungeon.battleData.menu != null){
+						dungeon.battleData.menu.destroy();
+					}
+					dungeon.waitForFight = true;
+					for (var i = 0; i < dungeon.enemies.length; i++){
+						//	Allow enemies to receive input
+						dungeon.enemies[i].inputEnabled = true;
+					}
+					dungeon.attackTimer = 0;
+				}
+			
+			]
+			
+		},
 		
 		battleBackground : null,
 		
@@ -230,7 +313,6 @@ window.onload = function() {
 			
 			//	Do not allow the player to move while battling
 			this.canMove = false;
-			console.log(this.battleBackground);
 		},
 		
 		spawnEnemies : function(rndmAmtData, rndmLvlData, plcmntData, availableEnemies){
@@ -295,28 +377,7 @@ window.onload = function() {
 		
 		openFightMenu : function(){
 			//	Open the menu required to fight in battle
-			console.log(dungeon.battleBackground);
-			dungeon.fightMenu = game.add.sprite(dungeon.battleBackground.x, dungeon.battleBackground.y, 'fightMenu', 0);
-			dungeon.fightMenu.anchor.setTo(0.5, 0.5);
-			dungeon.attackButton = game.add.button(dungeon.fightMenu.x, dungeon.fightMenu.y, 'attackButton', dungeon.chooseEnemy, null, 'hover', 'normal', 'click');
-			dungeon.attackButton.anchor.setTo(0.5, 0.5);
-		},
-		
-		closeFightMenu : function(){
-			//	Close the menu required to fight in battle
-			this.fightMenu.destroy();
-			this.attackButton.destroy();
-		},
-		
-		chooseEnemy : function(){
-			//	Choose the enemy to do an action
-			dungeon.closeFightMenu();
-			dungeon.waitForFight = true;
-			for (var i = 0; i < dungeon.enemies.length; i++){
-				//	Allow enemies to receive input
-				dungeon.enemies[i].inputEnabled = true;
-			}
-			dungeon.attackTimer = 0;
+			dungeon.battleData.menu = shared.openMenu(game.camera.x, 200, 400, 'fightMenu', 15, 5, 10, dungeon.battleData);
 		}
 	};
 	
