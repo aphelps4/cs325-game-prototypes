@@ -13,6 +13,42 @@ window.onload = function() {
 	// the high score if you want.
 	var shared = {
 		
+		state : {
+			
+			team : [null, null, null, null],
+			
+			teamPlace : 0
+			
+		},
+		
+		load : function(){
+			//	Set up the game for the player.
+			this.state.team[0] = {
+				name : 'Wolf',
+				lvl : 1,
+				hp : 10,
+				str : 4,
+				mag : 4,
+				def : 4,
+				spd : 4,
+				sprite : null,
+				background : null,
+				frame : null,
+				battleSetup : function(x, y){
+					//	Place the portrait of the wolf for battle purposes.
+					this.background = game.add.button(x, y, 'portraitBackground', dungeon.openFightMenu);
+					this.sprite = game.add.sprite(x, y, 'portraitWolf', 0);
+					this.frame = game.add.sprite(x, y, 'portraitFrame', 0);
+				},
+				battleEnd : function(){
+					this.background.destroy();
+					this.sprite.destroy();
+					this.frame.destroy();
+				}
+			};
+			this.state.teamPlace += 1;
+		},
+		
 		openMenu : function(x, upy, downy, menuBackground, buttonHeight, xbuffer, ybuffer, data){
 			//	Open a menu in the specified area with the given options in a vertical format
 			//	x will be the left bound where the menu objects are placed
@@ -107,12 +143,6 @@ window.onload = function() {
 		},
 		
 		battleBackground : null,
-		
-		playerPortrait : null,
-		
-		portraitBackground : null,
-		
-		portraitFrame : null,
 		
 		enemies : [],
 		
@@ -297,19 +327,17 @@ window.onload = function() {
 			//spawnEnemies(enemyAmount);
 			this.spawnEnemies(rndmAmtData, rndmLvlData, plcmntData, availableEnemies);
 			
-			//	Makes the portrait and moves it to the corner - fine tune later
-			//	Change this to be the team portraits (possibly in the player objects)
-			this.playerPortrait = game.add.sprite(this.battleBackground.x, this.battleBackground.y, 'portraitWolf', 0);
-			this.playerPortrait.anchor.setTo(0.5, 0.5);
-			this.playerPortrait.x = this.battleBackground.x - 220;
-			this.playerPortrait.y = this.battleBackground.y + 205;
-			//portraitBackground = game.add.sprite(playerPortrait.x, playerPortrait.y, 'portraitBackground', 0);
-			//	Replace random encounter function call with actual menu options later
-			this.portraitBackground = game.add.button(this.playerPortrait.x, this.playerPortrait.y, 'portraitBackground', this.openFightMenu);
-			this.portraitBackground.anchor.setTo(0.5, 0.5);
-			this.portraitBackground.moveDown();
-			this.portraitFrame = game.add.sprite(this.playerPortrait.x, this.playerPortrait.y, 'portraitFrame', 0);
-			this.portraitFrame.anchor.setTo(0.5, 0.5);
+			//	Place the players team for user input.
+			var width = 156;
+			var buffer = 0;
+			
+			var overallWidth = width * shared.state.teamPlace;
+			var xplace = (this.battleBackground.x) - (overallWidth/2);	//	Middle of page then up half the overall height
+			for (var i = 0; i < shared.state.teamPlace; i++){
+				//	Randomly create an enemy from available encounters and place it
+				shared.state.team[i].battleSetup(xplace, (this.battleBackground.y + 110));
+				xplace += width + buffer;
+			}
 			
 			//	Do not allow the player to move while battling
 			this.canMove = false;
@@ -353,16 +381,23 @@ window.onload = function() {
 				enemyAmount = rndmAmtData.amtMax;
 			}
 			
+			//	Stored variables for now may want to add them to input data
+			var width = 156;
+			var buffer = 30;
+			
 			//	Enemy amount has been generated, place enemies
 			//var back = ceil(enemyAmount/2)
 			//var front = floor(enemyAmount/2)
 			//	Always start left most in the back (so even in the back odd in front)
 			this.enemies.length = enemyAmount;
+			var overallWidth = width * enemyAmount;
+			overallWidth = overallWidth + (buffer * (enemyAmount - 1));
+			var xplace = (this.battleBackground.x) - (overallWidth/2);	//	Middle of page then up half the overall height
 			for (var i = 0; i < enemyAmount; i++){
 				//	Randomly create an enemy from available encounters and place it
 				var choice = game.rnd.between(0, (availableEnemies.length - 1));
 				var enemy = availableEnemies[choice].calculateStats(1);
-				enemy.sprite.x = (this.battleBackground.x - 330) + (plcmntData.width * i);
+				enemy.sprite.x = xplace;
 				if (i % 2 == 0){
 					//	Place the enemy in the back if they are even
 					enemy.sprite.y = this.battleBackground.y + plcmntData.back;
@@ -372,12 +407,14 @@ window.onload = function() {
 					enemy.sprite.y = this.battleBackground.y + plcmntData.front;
 				}
 				this.enemies[i] = enemy;
+				xplace += width + buffer;
 			}
 		},
 		
 		openFightMenu : function(){
 			//	Open the menu required to fight in battle
-			dungeon.battleData.menu = shared.openMenu(game.camera.x, 200, 400, 'fightMenu', 15, 5, 10, dungeon.battleData);
+			dungeon.battleData.menu = shared.openMenu(game.camera.x, game.camera.y + 200, game.camera.y + 400, 'fightMenu',
+				15, 5, 10, dungeon.battleData);
 		}
 	};
 	

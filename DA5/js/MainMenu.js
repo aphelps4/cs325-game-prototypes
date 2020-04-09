@@ -8,6 +8,8 @@ GameStates.makeMainMenu = function( game, shared ) {
     function startGame(pointer) {
 
         //	Ok, the Play Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
+		
+		shared.load();
 
         //	And start the actual game
         game.state.start('Forest1');

@@ -27,9 +27,9 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 	}
 	var plcmntData = {
 		
-		back : -100,
+		back : 90,
 		
-		front : -50,
+		front : 140,
 		
 		width : 100 //	May be wrong, check later
 		
@@ -54,6 +54,7 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 					frame : null
 				}
 				object.sprite = game.add.sprite(0, 0, 'portraitRabbit', 0);
+				object.sprite.anchor.setTo(0, 1);
 				return object
 			}
 		}
