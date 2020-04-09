@@ -29,6 +29,11 @@ GameStates.makePreloader = function( game ) {
 			game.load.audio('menuMusic', ['assets/EternalForest.wav']);
             //	+ lots of other required assets here
 			
+			//	Town assets
+			game.load.image('townBackground', 'assets/townBackground.png');
+			game.load.atlas('forestButton', 'assets/forestButton.png', 'assets/menuButton.json');
+			game.load.audio('townMusic', ['assets/town.wav']);
+			
 			//	Dungeon assets
 			game.load.spritesheet('overWorldWolf', 'assets/overWorldWolf.png', 156, 156);
 			
@@ -64,7 +69,7 @@ GameStates.makePreloader = function( game ) {
             //	If you don't have any music in your game then put the game.state.start line into the create function and delete
             //	the update function completely.
             
-            if (game.cache.isSoundDecoded('menuMusic') && ready == false)
+            if (game.cache.isSoundDecoded('menuMusic') && game.cache.isSoundDecoded('townMusic') && ready == false)
             {
                 ready = true;
                 game.state.start('MainMenu');

@@ -1,6 +1,6 @@
 "use strict";
 
-GameStates.makeMainMenu = function( game, shared ) {
+GameStates.makeTown = function( game, shared ) {
 
 	var music = null;
 	var playButton = null;
@@ -10,18 +10,20 @@ GameStates.makeMainMenu = function( game, shared ) {
 		
 		menuButtons : [
 	
-		'startNewButton'
+		'forestButton'
 		
 		],
 	
 		buttonFunctions : [
 		
 			function(){
-				//	This is the function for starting a new game.
-				shared.load();
+				//	This is the function for going into the forest.
 				menu.destroy();
 				music.stop();
-				game.state.start('Town');
+				music = game.add.audio('menuMusic');
+				music.loop = true;
+				music.play();
+				game.state.start('Forest1');
 			}
 		
 		]
@@ -47,13 +49,13 @@ GameStates.makeMainMenu = function( game, shared ) {
             //	Here all we're doing is playing some music and adding a picture and button
             //	Naturally I expect you to do something significantly better :)
     
-            music = game.add.audio('menuMusic');
+            music = game.add.audio('townMusic');
 			music.loop = true;
             music.play();
     
-            game.add.sprite(0, 0, 'titleScreen');
+            game.add.sprite(0, 0, 'townBackground');
     
-            menu = shared.openMenu(0, 180, 600, null, 66, 0, 40, menuData);
+            menu = shared.openMenu(0, 0, 600, null, 66, 0, 20, menuData);
     
         },
     
