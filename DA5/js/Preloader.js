@@ -32,7 +32,7 @@ GameStates.makePreloader = function( game ) {
 			//	Town assets
 			game.load.image('townBackground', 'assets/townBackground.png');
 			game.load.atlas('forestButton', 'assets/forestButton.png', 'assets/menuButton.json');
-			game.load.audio('townMusic', ['assets/town.wav']);
+			game.load.audio('townMusic', ['assets/Town.wav']);
 			
 			//	Dungeon assets
 			game.load.spritesheet('overWorldWolf', 'assets/overWorldWolf.png', 156, 156);
