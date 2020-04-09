@@ -4,6 +4,28 @@ GameStates.makeMainMenu = function( game, shared ) {
 
 	var music = null;
 	var playButton = null;
+	var menu = null;
+	
+	var menuData = {
+		
+		menuButtons : [
+	
+		'startNewButton'
+		
+		],
+	
+		buttonFunctions : [
+		
+			function(){
+				//	This is the function for starting a new game.
+				shared.load();
+				menu.destroy();
+				game.state.start('Forest1');
+			}
+		
+		]
+		
+	}
     
     function startGame(pointer) {
 
@@ -30,7 +52,9 @@ GameStates.makeMainMenu = function( game, shared ) {
     
             game.add.sprite(0, 0, 'titleScreen');
     
-            playButton = game.add.button( 100, 400, 'playButton', startGame, null, 'over', 'out', 'down');
+            //playButton = game.add.button( 100, 400, 'playButton', startGame, null, 'over', 'out', 'down');
+			
+			menu = shared.openMenu(0, 180, 600, null, 66, 0, 40, menuData);
     
         },
     

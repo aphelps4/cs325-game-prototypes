@@ -13,8 +13,7 @@ GameStates.makePreloader = function( game ) {
     
             //	These are the assets we loaded in Boot.js
             //	A nice sparkly background and a loading progress bar
-            background = game.add.sprite(0, 0, 'preloaderBackground');
-            preloadBar = game.add.sprite(300, 400, 'preloaderBar');
+            preloadBar = game.add.sprite(190, 400, 'preloaderBar');
     
             //	This sets the preloadBar sprite as a loader sprite.
             //	What that does is automatically crop the sprite from 0 to full-width
@@ -23,22 +22,18 @@ GameStates.makePreloader = function( game ) {
 			
 			//	Title menu assets
 			game.load.image('titleScreen', 'assets/titleScreen.png');
+			game.load.atlas('startNewButton', 'assets/startNewButton.png', 'assets/menuButton.json');
     
             //	Here we load the rest of the assets our game needs.
             //	As this is just a Project Template I've not provided these assets, swap them for your own.
-            game.load.image('titlePage', 'assets/title.jpg');
-            game.load.atlas('playButton', 'assets/play_button.png', 'assets/play_button.json');
-            game.load.audio('titleMusic', ['assets/Poppers and Prosecco.mp3']);
 			game.load.audio('menuMusic', ['assets/EternalForest.wav']);
             //	+ lots of other required assets here
-            game.load.image( 'logo', 'assets/phaser.png' );
 			
 			//	Dungeon assets
 			game.load.spritesheet('overWorldWolf', 'assets/overWorldWolf.png', 156, 156);
 			
 			//	Load assets for Phaser Grid Movement example
 			game.load.image('tiles', 'assets/drawtiles-spaced-trees-large.png');
-			game.load.image('car', 'assets/car90.png');
 			game.load.tilemap('map', 'assets/grid.csv', null, Phaser.Tilemap.CSV);
 			
 			//	Battle assets

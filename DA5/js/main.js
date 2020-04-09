@@ -26,6 +26,7 @@ window.onload = function() {
 			this.state.team[0] = {
 				name : 'Wolf',
 				lvl : 1,
+				healthLeft : 10,
 				hp : 10,
 				str : 4,
 				mag : 4,
