@@ -182,18 +182,18 @@ GameStates.makeGame = function( game, shared ) {
 	
 	function battleOver(){
 		if (battleBackground != null){
-		battleBackground.destroy();
-		//	Make null so the program can remake it
-		battleBackground = null;
-		//	Allow the player to move again now that the battle is over
-		canMove = true;
-		playerPortrait.destroy();
-		portraitBackground.destroy();
-		portraitFrame.destroy();
-		for(var i = 0; i < enemyList.length; i++){
-			enemyList[i].destroy();
-		}
-		enemyList = [];
+			battleBackground.destroy();
+			//	Make null so the program can remake it
+			battleBackground = null;
+			//	Allow the player to move again now that the battle is over
+			canMove = true;
+			playerPortrait.destroy();
+			portraitBackground.destroy();
+			portraitFrame.destroy();
+			for(var i = 0; i < enemyList.length; i++){
+				enemyList[i].destroy();
+			}
+			enemyList = [];
 		}
 	}
 	

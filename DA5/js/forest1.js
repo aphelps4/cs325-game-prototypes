@@ -93,8 +93,12 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
         update: function () {
     
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
+			
+			dungeon.chooseEnemy();
+			
+			dungeon.battleOver();
             
-            if (dungeon.move(cursors, map, tileSize, 20)){
+            if (dungeon.move(cursors, map, tileSize, 10)){
 				//	Random encounter occurred
 				dungeon.startBattle(rndmAmtData, rndmLvlData, plcmntData, availableEnemies);
 			}

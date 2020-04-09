@@ -133,9 +133,9 @@ window.onload = function() {
 					dungeon.waitForFight = true;
 					for (var i = 0; i < dungeon.enemies.length; i++){
 						//	Allow enemies to receive input
-						dungeon.enemies[i].inputEnabled = true;
+						dungeon.enemies[i].sprite.inputEnabled = true;
 					}
-					dungeon.attackTimer = 0;
+					dungeon.battling = true;
 				}
 			
 			]
@@ -150,9 +150,7 @@ window.onload = function() {
 		
 		moveTimer : 20,
 		
-		attackPause : 20,
-		
-		attackTimer : 0,
+		battling : false,
 		
 		waitForFight : false,
 		
@@ -198,10 +196,6 @@ window.onload = function() {
 						this.player.x -= tileSize;
 						//	player has moved so prevent them from moving again for a short while
 						this.moveTimer = 0;
-						//if (enemyEncounter <= 2){
-							//	20% of encountering an enemy while moving
-							//this.startBattle();
-						//}
 						if (this.randomEncounter(enctrChance)){
 							//	Random encounter here
 							return true;
@@ -225,10 +219,6 @@ window.onload = function() {
 					if (this.moveTimer >= this.pause){
 						this.player.x += tileSize;
 						this.moveTimer = 0;
-						//if (enemyEncounter <= 2){
-							//	20% of encountering an enemy while moving
-							//this.startBattle();
-						//}
 						if (this.randomEncounter(enctrChance)){
 							//	Random encounter here
 							return true;
@@ -253,10 +243,6 @@ window.onload = function() {
 					if (this.moveTimer >= this.pause){
 						this.player.y -= tileSize;
 						this.moveTimer = 0;
-						//if (enemyEncounter <= 2){
-							//	20% of encountering an enemy while moving
-							//this.startBattle();
-						//}
 						if (this.randomEncounter(enctrChance)){
 							//	Random encounter here
 							return true;
@@ -281,10 +267,6 @@ window.onload = function() {
 					if (this.moveTimer >= this.pause){
 						this.player.y += tileSize;
 						this.moveTimer = 0;
-						//if (enemyEncounter <= 2){
-							//	20% of encountering an enemy while moving
-							//this.startBattle();
-						//}
 						if (this.randomEncounter(enctrChance)){
 							//	Random encounter here
 							return true;
@@ -415,6 +397,47 @@ window.onload = function() {
 			//	Open the menu required to fight in battle
 			dungeon.battleData.menu = shared.openMenu(game.camera.x, game.camera.y + 200, game.camera.y + 400, 'fightMenu',
 				15, 5, 10, dungeon.battleData);
+		},
+		
+		chooseEnemy : function(){
+			//	Allow the user to select an enemy when attacking.
+			if (this.battling){
+				for (var i = 0; i < this.enemies.length; i++){
+					if (this.enemies[i].sprite.input.justPressed(0, 30)){
+						console.log(i);
+						this.enemies[i].sprite.kill();
+					}
+				}
+			}
+		},
+		
+		battleOver : function(){
+			//	Check if the battle is over and go back to dungeon crawling if it is.
+			if (this.battling){
+				var dead = 0;
+				for (var i = 0; i < this.enemies.length; i++){
+					if (this.enemies[i].sprite.alive == false){
+						//	Count the number of dead enemies
+						dead++;
+					}
+				}
+				if (dead == this.enemies.length){
+					//	All enemies are dead, battle is over
+					this.battleBackground.destroy();
+					//	Destroy the enemies.
+					for (var i = 0; i < this.enemies.length; i++){
+						this.enemies[i].sprite.destroy();
+					}
+					this.enemies = [];
+					//	Destroy the team portraits
+					for (var i = 0; i < shared.state.teamPlace; i++){
+						shared.state.team[i].battleEnd();
+					}
+					//	End battling and allow player to move again
+					this.battling = false;
+					this.canMove = true;
+				}
+			}
 		}
 	};
 	
