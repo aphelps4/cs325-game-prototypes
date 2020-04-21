@@ -1,0 +1,36 @@
+{"frames": [
+
+{
+	"filename": "normal",
+	"frame": {"x":0,"y":0,"w":60,"h":15},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":15},
+	"sourceSize": {"w":60,"h":15}
+},
+{
+	"filename": "hover",
+	"frame": {"x":0,"y":15,"w":60,"h":15},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":15},
+	"sourceSize": {"w":60,"h":15}
+},
+{
+	"filename": "click",
+	"frame": {"x":0,"y":30,"w":60,"h":15},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":15},
+	"sourceSize": {"w":60,"h":15}
+}],
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "button_texture_atlas.png",
+	"format": "RGBA8888",
+	"size": {"w":193,"h":213},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:94df81041404a206a4e9cd597a1e3495$"
+}
+}
