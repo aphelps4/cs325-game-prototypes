@@ -164,10 +164,14 @@ window.onload = function() {
 			
 			if (this.player == null){
 				this.player = game.add.sprite(x, y, sprite, 0);
+				this.player.animations.add('still', [0]);
+				this.player.animations.add('moving', [1,2,3,0], 8, true);
+				this.player.play('still');
 			}
 			else{
 				this.player.x = x;
 				this.player.y = y;
+				this.player.play('still');
 			}
 		},
 		
@@ -188,6 +192,7 @@ window.onload = function() {
 				
 				if ((this.player.x - (tileSize/2)) % tileSize == 0){
 					//	Snapped into place after that movement so check for encounter
+					this.player.play('still');
 					if (this.randomEncounter(enctrChance)){
 						//	Random encounter here
 						return true;
@@ -200,6 +205,7 @@ window.onload = function() {
 				
 				if ((this.player.y - (tileSize/2)) % tileSize == 0){
 					//	Snapped into place after that movement so check for encounter
+					this.player.play('still');
 					if (this.randomEncounter(enctrChance)){
 						//	Random encounter here
 						return true;
@@ -234,6 +240,7 @@ window.onload = function() {
 						}
 					}*/
 					this.player.x -= moveLength;
+					this.player.play('moving');
 					this.direction = -1;
 				}
 				
@@ -260,6 +267,7 @@ window.onload = function() {
 						}
 					}*/
 					this.player.x += moveLength;
+					this.player.play('moving');
 					this.direction = 1;
 				}
 				
@@ -286,6 +294,7 @@ window.onload = function() {
 						}
 					}*/
 					this.player.y -= moveLength;
+					this.player.play('moving');
 					this.direction = -1;
 				}
 				
@@ -312,6 +321,7 @@ window.onload = function() {
 						}
 					}*/
 					this.player.y += moveLength;
+					this.player.play('moving');
 					this.direction = 1;
 				}
 				
@@ -438,6 +448,10 @@ window.onload = function() {
 			//	Open the menu required to fight in battle
 			dungeon.battleData.menu = shared.openMenu(game.camera.x, game.camera.y + 200, game.camera.y + 400, 'fightMenu',
 				15, 5, 10, dungeon.battleData);
+			//	Set it so player can not click on enemies if they are opening the menu again
+			for (var i = 0; i < dungeon.enemies.length; i++){
+				dungeon.enemies[i].sprite.inputEnabled = false;
+			}
 		},
 		
 		chooseEnemy : function(){
@@ -445,8 +459,11 @@ window.onload = function() {
 			if (this.battling){
 				for (var i = 0; i < this.enemies.length; i++){
 					if (this.enemies[i].sprite.input.justPressed(0, 30)){
-						console.log(i);
+						//	An enemy was chosen so make them receive the damage and make the other enemies unselectable
 						this.enemies[i].sprite.kill();
+						for (var i = 0; i < dungeon.enemies.length; i++){
+							dungeon.enemies[i].sprite.inputEnabled = false;
+						}
 					}
 				}
 			}
