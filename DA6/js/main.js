@@ -179,13 +179,30 @@ window.onload = function() {
 		
 		enemies : [],
 		
-		pause : 20,
-		
-		moveTimer : 20,
-		
 		battling : false,
 		
-		waitForFight : false,
+		expPage : {
+			
+			background : null,
+			
+			nameData : [],
+			
+			barData : null,
+			
+			destroy : function(){
+				if (this.background != null){
+					this.background.destroy();
+					this.background = null;
+				}
+				for (var i = 0; i < this.nameData.length; i++){
+					this.nameData[i].destroy();
+				}
+				if (this.barData != null){
+					this.barData.destroy();
+				}
+			}
+			
+		},
 		
 		initializePlayer : function(x, y, sprite){
 			//	Initialize the sprite the player will be controlling
@@ -477,7 +494,7 @@ window.onload = function() {
 			}
 		},
 		
-		chooseEnemy : function(){
+		enemyInput : function(){
 			//	Allow the user to interact with an enemy when attacking.
 			if (this.battling){
 				for (var i = 0; i < this.enemies.length; i++){
@@ -529,6 +546,7 @@ window.onload = function() {
 					}
 				}
 				if (dead == this.enemies.length){
+					/*
 					//	All enemies are dead, battle is over
 					this.battleBackground.destroy();
 					//	Destroy the enemies.
@@ -542,8 +560,64 @@ window.onload = function() {
 					}
 					//	End battling and allow player to move again
 					this.battling = false;
-					this.canMove = true;
+					this.canMove = true;*/
+					if (this.expPage.background == null){
+						this.expMenu();
+						
+						//	Destroy the team portraits
+						for (var i = 0; i < shared.state.teamPlace; i++){
+							shared.state.team[i].battleEnd();
+						}
+					}
+					else if (game.input.activePointer.justPressed(30)){
+						//	Player has clicked and wants to move on from menu
+						this.expPage.destroy();
+						//	All enemies are dead, battle is over, and player has viewed exp gained
+						this.battleBackground.destroy();
+						//	Destroy the enemies.
+						for (var i = 0; i < this.enemies.length; i++){
+							this.enemies[i].sprite.destroy();
+						}
+						this.enemies = [];
+						//	End battling and allow player to move again
+						this.battling = false;
+						this.canMove = true;
+					}
 				}
+			}
+		},
+		
+		expMenu : function(){
+			//	Show the player how much exp they gained
+			var upy = game.camera.y + 100;
+			var downy = game.camera.y + 500;
+			this.expPage.background = shared.openMenu(game.camera.x, upy, downy, 'expPage', 0, 0, 0, { menuButtons : [], buttonFunctions : []});
+			//	Make the bars 400 width
+			
+			var height = 50;
+			var ybuffer = 30;
+			var mul = shared.state.teamPlace;
+			var overallHeight = height * mul;
+			mul -= 1;	//	Calculate the buffer amount between the options vertically
+			overallHeight = overallHeight + (ybuffer * mul);
+			var yplace = ((upy + downy)/2) - (overallHeight/2);	//	Middle of page then up half the overall height
+			var xplace = game.camera.x + 100;
+			this.expPage.nameData.length = shared.state.teamPlace;
+			this.expPage.barData = game.add.graphics(0,0);
+			for (var i = 0; i < shared.state.teamPlace; i++){
+				//	Add the buttons in their respective places
+				//	Name
+				var style = { font: "25px Verdana", fill: "#FFFFFF"};
+				this.expPage.nameData[i] = game.add.text(xplace, yplace, shared.state.team[i].name, style);
+				//	Experience
+				var height = 25;
+				var width = 400;
+				var percentExp = 1 / 2;	//	Change this to be the teams experience over needed experience
+				this.expPage.barData.beginFill(0x1546C0, 1);
+				this.expPage.barData.drawRect(xplace, yplace + height, width, height);
+				this.expPage.barData.beginFill(0x5EE2C5, 1);
+				this.expPage.barData.drawRect(xplace, yplace + height, width * percentExp, height);
+				yplace += height + ybuffer;
 			}
 		}
 	};

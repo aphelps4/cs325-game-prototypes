@@ -42,10 +42,6 @@ GameStates.makePreloader = function( game ) {
 			game.load.image('forest1Tiles', 'assets/forest1Tiles.png');
 			game.load.tilemap('forest1Map', 'assets/forest1Map.csv', null, Phaser.Tilemap.CSV);
 			
-			//	Load assets for Phaser Grid Movement example
-			game.load.image('tiles', 'assets/drawtiles-spaced-trees-large.png');
-			game.load.tilemap('map', 'assets/grid.csv', null, Phaser.Tilemap.CSV);
-			
 			//	Battle assets
 			game.load.image('battleBackground', 'assets/battleBackground.png');
 			game.load.spritesheet('fightMenu', 'assets/fightMenu.png', 200, 200);
@@ -54,6 +50,7 @@ GameStates.makePreloader = function( game ) {
 			game.load.spritesheet('portraitFrame', 'assets/portraitFrame.png', 156, 190);
 			game.load.spritesheet('portraitWolf', 'assets/portraitWolf.png', 156, 190);
 			game.load.spritesheet('portraitRabbit', 'assets/portraitRabbit.png', 156, 190);
+			game.load.image('expPage', 'assets/expPage.png');
         },
     
         create: function () {

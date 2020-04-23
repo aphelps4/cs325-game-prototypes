@@ -74,12 +74,6 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
             //	Change the background color to look grassy
 			game.stage.backgroundColor = "0x4BC421";
 			
-			//	code for Phaser grid movement example
-			/*map = game.add.tilemap('map', tileSize, tileSize);
-			tileset = map.addTilesetImage('tiles', null, tileSize, tileSize);
-			layer = map.createLayer(0);
-			layer.resizeWorld();*/
-			
 			//	Past data is still here, destroy it before overwriting it
 			if (map != null){
 				map.destroy();
@@ -108,7 +102,7 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
     
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
 			
-			dungeon.chooseEnemy();
+			dungeon.enemyInput();
 			
 			dungeon.battleOver();
             

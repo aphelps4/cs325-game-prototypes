@@ -40,31 +40,31 @@ It is a dungeon crawler that will let you catch the enemies and use them (eventu
 
 <li><strong>Technical Merit:</strong>
 <ul>
-<li>It has random encounters and it has the ability to randomly build the battles so they can have a varying amount of enemies.</li>
-<li>It has a function that builds menus so I can easily add menu options as I update it.</li>
+<li>It is capable of calculating the stats for the main player.</li>
+<li>It shows the health of enemies if you hover over them while in attack mode. The player health is now shown on the portraits as well.</li>
+<li>It now has an experience page after a battle.
 </ul>
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
-Most of my time was spent breaking my original program and rebuilding it based on what I have learned about Phaser throughout the semester.
-While it may not look very updated, it is now more set up to make it easier to add new features to it.
+Getting a UI that feels good with Phaser is a challenge. It is also tricky coming up with stats for the characters of the game
+although a lesson in the math class I am taking this semester made this easier as I can come up with functions if I can determine
+points.
 </li>
 
 <li><strong>Prototype Assets:</strong>
-Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
 <ul>
-<li>Grid movement and map: Phaser example <a href="http://phaser.io/examples/v3/view/game-objects/tilemap/static/grid-movement">Grid movement</a></li>
-<li>Fight menu font: Calibri size 14</li>
+<li>Fight menu font: Calibri</li>
+<li>Exp menu font: Verdana</li>
 <li>Rest of menu fonts: <a href="http://www.publicdomainfiles.com/show_file.php?id=13487095304649">Black Chancery</a></li>
-<li>Everything else: self-made</li>
+<li>Music: self-made through Caustic</li>
+<li>Sound effects: self-made through Bfxr</li>
+<li>Visuals: self-made through paint.net</li>
 </ul>
 </li>
 
 <li><strong>Prototype Closest Other Game:</strong>
 Etrian Odyssey
-<ul>
-<li>The code for this example is adapted from the <a href="http://phaser.io/examples/v3/view/game-objects/tilemap/static/grid-movement">Phaser Grid Movement Project Template</a></li>
-</ul>
 </li>
 
 <li><strong>High Concept:</strong>
@@ -76,12 +76,12 @@ Move through a dungeon and fight any monsters that block your way in turn-based 
 <li>This game receives input from the arrow keys and the mouse.</li>
 <li>The game generates random numbers when determining how many enemies the player will face and whether the player will be ambushed by enemies when moving.</li>
 <li>The genre of the game is top-down dungeon crawler.</li>
-<li>The play style I used was moving around the area to summon monsters to fight.</li>
+<li>The play style is explorer and achiever</li>
 </ul>
 </li>
 
 <li><strong>Prototype Goal:</strong>
-Grid based movement and turn-based combat.
+Grid based movement, turn-based combat, and UI.
 </li>
 
 <li><strong>Player Experience Goals:</strong>
@@ -90,8 +90,8 @@ I want players to be curious about what they will see in the forest. I want them
 
 <li><strong>Gameplay:</strong>
 When in the dungeon, you use your arrow keys to move around the grid that makes up the world. Occasionally, a monster will pop up and the player will have to fight them in turn based combat where they select their actions and the target by clicking.
-Future: The players will have a hub where they can go to and take a break between wandering the dungeon. They can use items they found in the dungeon to craft things that will help on their journey. Players will also be able to catch the monsters in the forest once they have a capture item. Players can use this item to build their team with any enemy they are capable of catching in the woods. An auto-map feature will also be included so players can see where they are and where they have been at any time when pausing the game.
-Once there is a hub for the players to go back to so they can heal their characters, everything will have health and be capable of fighting.
+The players have a hub where they can go to and take a break between wandering the dungeon.
+Future: They can use items they found in the dungeon to craft things that will help on their journey. Players will also be able to catch the monsters in the forest once they have a capture item. Players can use this item to build their team with any enemy they are capable of catching in the woods. An auto-map feature will also be included so players can see where they are and where they have been at any time when pausing the game.
 </li>
 
 <li><strong>Strategies:</strong>
