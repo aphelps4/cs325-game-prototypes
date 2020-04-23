@@ -26,6 +26,8 @@ window.onload = function() {
 			this.state.team[0] = {
 				name : 'Wolf',
 				lvl : 1,
+				haveExp : 0,
+				exp : 5,
 				healthLeft : 50,
 				hp : 50,
 				str : 10,
@@ -59,6 +61,20 @@ window.onload = function() {
 				},
 				calculateStats(){
 					//	Takes the character level and calculates the stats
+					//	hp
+					var health = ((650 / 49) * (this.lvl - 1)) + 50;
+					var healthChange = this.hp - health;
+					this.hp = health;
+					this.healthLeft += healthChange;
+					//	others
+					var stat = ((110 / 49) * (this.lvl - 1)) + 10;
+					this.str = stat;
+					this.mag = stat;
+					this.def = stat;
+					this.spd = stat;
+					//	exp
+					stat = (45 * (this.lvl - 1)) + 5;
+					this.exp = stat;
 				}
 			};
 			this.state.teamPlace += 1;

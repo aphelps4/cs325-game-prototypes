@@ -20,6 +20,8 @@ GameStates.makeTown = function( game, shared ) {
 		
 			function(){
 				//	This is the function for healing the party
+				var audio = game.add.audio('restSound');
+				audio.play();
 				for (var i = 0; i < shared.state.teamPlace; i++){
 					shared.state.team[i].healthLeft = shared.state.team[i].hp;
 				}
