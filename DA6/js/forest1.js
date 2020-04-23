@@ -44,6 +44,7 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 				var object = {
 					name : this.name,
 					lvl : lvl,
+					healthLeft : lvl * 6,
 					hp : lvl * 6,
 					str : lvl * 2,
 					mag : lvl,
@@ -51,7 +52,8 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 					spd : lvl * 3,
 					sprite : null,
 					background : null,
-					frame : null
+					frame : null,
+					statDisplay : null
 				}
 				object.sprite = game.add.sprite(0, 0, 'portraitRabbit', 0);
 				object.sprite.anchor.setTo(0, 1);

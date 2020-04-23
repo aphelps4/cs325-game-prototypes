@@ -478,14 +478,40 @@ window.onload = function() {
 		},
 		
 		chooseEnemy : function(){
-			//	Allow the user to select an enemy when attacking.
+			//	Allow the user to interact with an enemy when attacking.
 			if (this.battling){
 				for (var i = 0; i < this.enemies.length; i++){
+					//	Clicking on enemy
 					if (this.enemies[i].sprite.input.justPressed(0, 30)){
 						//	An enemy was chosen so make them receive the damage and make the other enemies unselectable
 						this.enemies[i].sprite.kill();
+						if (this.enemies[i].statDisplay != null){
+							this.enemies[i].statDisplay.destroy();
+							this.enemies[i].statDisplay = null;
+						}
 						for (var i = 0; i < dungeon.enemies.length; i++){
 							dungeon.enemies[i].sprite.inputEnabled = false;
+						}
+					}
+					//	Hovering over an enemy
+					else if (this.enemies[i].sprite.input.justOver(0, 30)){
+						//	Display the health of the enemy so the player knows if they want to attack that one
+						var x = this.enemies[i].sprite.x;
+						var y = this.enemies[i].sprite.y;
+						var height = 10;
+						var percentHealth = this.enemies[i].healthLeft / this.enemies[i].hp;
+						this.enemies[i].statDisplay = game.add.graphics(0,0);
+						this.enemies[i].statDisplay.beginFill(0x1546C0, 1);
+						this.enemies[i].statDisplay.drawRect(x, y - (this.enemies[i].sprite.height + height), this.enemies[i].sprite.width, height);
+						this.enemies[i].statDisplay.beginFill(0x00DB20, 1);
+						this.enemies[i].statDisplay.drawRect(x, y - (this.enemies[i].sprite.height + height), this.enemies[i].sprite.width * percentHealth, height);
+					}
+					//	No longer hovering over an enemy
+					else if (this.enemies[i].sprite.input.justOut(0, 30)){
+						//	Delete the display of health
+						if (this.enemies[i].statDisplay != null){
+							this.enemies[i].statDisplay.destroy();
+							this.enemies[i].statDisplay = null;
 						}
 					}
 				}
