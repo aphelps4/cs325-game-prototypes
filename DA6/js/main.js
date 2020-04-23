@@ -169,8 +169,13 @@ window.onload = function() {
 				this.player.play('still');
 			}
 			else{
-				this.player.x = x;
+				/*this.player.x = x;
 				this.player.y = y;
+				this.player.play('still');*/
+				this.player.destroy();
+				this.player = game.add.sprite(x, y, sprite, 0);
+				this.player.animations.add('still', [0]);
+				this.player.animations.add('moving', [1,2,3,0], 8, true);
 				this.player.play('still');
 			}
 		},
@@ -183,6 +188,15 @@ window.onload = function() {
 			//	enctrChance is the chance of running into enemies
 			//	Return true if the player runs into enemies
 			
+			//	Store the wall number here so it is easier to change
+			var wall = 1;
+			var wall2 = 2;
+			var wall3 = 4;
+			//	Store the change scene numbers here for now, will need to add a list to parameters later
+			var town = 3;
+			var forest2 = 5;
+			
+			
 			//	Divisor must evenly divide the tileSize or else this will not work - can possibly fix by checking if within the range of moveLength
 			var moveLength = tileSize / 20;	//	Finish moving in 20 frames
 			
@@ -191,8 +205,16 @@ window.onload = function() {
 				this.player.x += moveLength * this.direction;
 				
 				if ((this.player.x - (tileSize/2)) % tileSize == 0){
-					//	Snapped into place after that movement so check for encounter
+					//	Snapped into place after that movement so check for encounter or move to new area
 					this.player.play('still');
+					if (map.getTileWorldXY(this.player.x, this.player.y).index == town){
+						//	On top of the tile that moves the character to town so do so.
+						game.state.start('Town');
+					}
+					if (map.getTileWorldXY(this.player.x, this.player.y).index == forest2){
+						//	On top of the tile that moves the character to forest2 but that does not exist so go to town
+						game.state.start('Town');
+					}
 					if (this.randomEncounter(enctrChance)){
 						//	Random encounter here
 						return true;
@@ -206,6 +228,14 @@ window.onload = function() {
 				if ((this.player.y - (tileSize/2)) % tileSize == 0){
 					//	Snapped into place after that movement so check for encounter
 					this.player.play('still');
+					if (map.getTileWorldXY(this.player.x, this.player.y).index == town){
+						//	On top of the tile that moves the character to town so do so.
+						game.state.start('Town');
+					}
+					if (map.getTileWorldXY(this.player.x, this.player.y).index == forest2){
+						//	On top of the tile that moves the character to forest2 but that does not exist so go to town
+						game.state.start('Town');
+					}
 					if (this.randomEncounter(enctrChance)){
 						//	Random encounter here
 						return true;
@@ -223,22 +253,11 @@ window.onload = function() {
 				//	changing the way the player is facing; could possibly change sprite if animation supports it
 				this.player.angle = 180;
 				
-				//	Checking if the tile to the left is a solid wall (denoted by 2 in the cvs tilemap)
-				if (tile.index === 2){
+				//	Checking if the tile to the left is a solid wall
+				if (tile.index == wall || tile.index == wall2 || tile.index == wall3){
 					//	Blocked, we can not move
 				}
 				else{
-					//	TODO Work on getting rid of the moveTimer/pause stuff
-					/*
-					if (this.moveTimer >= this.pause){
-						this.player.x -= tileSize;
-						//	player has moved so prevent them from moving again for a short while
-						this.moveTimer = 0;
-						if (this.randomEncounter(enctrChance)){
-							//	Random encounter here
-							return true;
-						}
-					}*/
 					this.player.x -= moveLength;
 					this.player.play('moving');
 					this.direction = -1;
@@ -253,19 +272,10 @@ window.onload = function() {
 				
 				this.player.angle = 0;
 				
-				if (tile.index === 2){
+				if (tile.index === wall || tile.index == wall2 || tile.index == wall3){
 					//	Blocked
 				}
 				else{
-					/*
-					if (this.moveTimer >= this.pause){
-						this.player.x += tileSize;
-						this.moveTimer = 0;
-						if (this.randomEncounter(enctrChance)){
-							//	Random encounter here
-							return true;
-						}
-					}*/
 					this.player.x += moveLength;
 					this.player.play('moving');
 					this.direction = 1;
@@ -281,18 +291,10 @@ window.onload = function() {
 				
 				this.player.angle = -90;
 				
-				if (tile.index === 2){
+				if (tile.index === wall || tile.index == wall2 || tile.index == wall3){
 					//	Blocked
 				}
 				else{
-					/*if (this.moveTimer >= this.pause){
-						this.player.y -= tileSize;
-						this.moveTimer = 0;
-						if (this.randomEncounter(enctrChance)){
-							//	Random encounter here
-							return true;
-						}
-					}*/
 					this.player.y -= moveLength;
 					this.player.play('moving');
 					this.direction = -1;
@@ -308,18 +310,10 @@ window.onload = function() {
 				
 				this.player.angle = 90;
 				
-				if (tile.index === 2){
+				if (tile.index === wall || tile.index == wall2 || tile.index == wall3){
 					//	Blocked
 				}
 				else{
-					/*if (this.moveTimer >= this.pause){
-						this.player.y += tileSize;
-						this.moveTimer = 0;
-						if (this.randomEncounter(enctrChance)){
-							//	Random encounter here
-							return true;
-						}
-					}*/
 					this.player.y += moveLength;
 					this.player.play('moving');
 					this.direction = 1;

@@ -36,6 +36,8 @@ GameStates.makePreloader = function( game ) {
 			
 			//	Dungeon assets
 			game.load.spritesheet('overWorldWolf', 'assets/overWorldWolf.png', 156, 156);
+			game.load.image('forest1Tiles', 'assets/forest1Tiles.png');
+			game.load.tilemap('forest1Map', 'assets/forest1Map.csv', null, Phaser.Tilemap.CSV);
 			
 			//	Load assets for Phaser Grid Movement example
 			game.load.image('tiles', 'assets/drawtiles-spaced-trees-large.png');
