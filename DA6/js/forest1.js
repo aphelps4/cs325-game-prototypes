@@ -89,9 +89,10 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 			layer = map.createLayer(0);
 			layer.resizeWorld();
 			
-			dungeon.initializePlayer(300, 300, 'overWorldWolf');
+			dungeon.initializePlayer(900, 2700, 'overWorldWolf');
 			dungeon.player.height = tileSize;
 			dungeon.player.width = tileSize;
+			dungeon.player.angle = -90;
 			dungeon.player.anchor.setTo(0.5, 0.5);
 			
 			game.camera.follow(dungeon.player);

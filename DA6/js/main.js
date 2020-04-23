@@ -162,22 +162,21 @@ window.onload = function() {
 			//	x will be the x position, y will be the y position
 			//	sprite will be a string to get the specific sprite
 			
-			if (this.player == null){
+			/*if (this.player == null){
 				this.player = game.add.sprite(x, y, sprite, 0);
 				this.player.animations.add('still', [0]);
 				this.player.animations.add('moving', [1,2,3,0], 8, true);
 				this.player.play('still');
 			}
-			else{
-				/*this.player.x = x;
-				this.player.y = y;
-				this.player.play('still');*/
+			else{*/
+			if (this.player != null){
+				//	Destroy the past player object before we replace it
 				this.player.destroy();
-				this.player = game.add.sprite(x, y, sprite, 0);
-				this.player.animations.add('still', [0]);
-				this.player.animations.add('moving', [1,2,3,0], 8, true);
-				this.player.play('still');
 			}
+			this.player = game.add.sprite(x, y, sprite, 0);
+			this.player.animations.add('still', [0]);
+			this.player.animations.add('moving', [1,2,3,0], 8, true);
+			this.player.play('still');
 		},
 		
 		move : function(cursors, map, tileSize, enctrChance){
