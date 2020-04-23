@@ -9,12 +9,21 @@ GameStates.makeTown = function( game, shared ) {
 	var menuData = {
 		
 		menuButtons : [
+		
+		'restButton',
 	
 		'forestButton'
 		
 		],
 	
 		buttonFunctions : [
+		
+			function(){
+				//	This is the function for healing the party
+				for (var i = 0; i < shared.state.teamPlace; i++){
+					shared.state.team[i].healthLeft = shared.state.team[i].hp;
+				}
+			},
 		
 			function(){
 				//	This is the function for going into the forest.

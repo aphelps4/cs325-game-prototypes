@@ -31,6 +31,8 @@ GameStates.makePreloader = function( game ) {
 			
 			//	Town assets
 			game.load.image('townBackground', 'assets/townBackground.png');
+			game.load.atlas('saveButton', 'assets/saveButton.png', 'assets/menuButton.json');
+			game.load.atlas('restButton', 'assets/restButton.png', 'assets/menuButton.json');
 			game.load.atlas('forestButton', 'assets/forestButton.png', 'assets/menuButton.json');
 			game.load.audio('townMusic', ['assets/Town.wav']);
 			

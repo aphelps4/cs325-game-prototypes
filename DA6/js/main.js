@@ -9,7 +9,7 @@ window.onload = function() {
 	//	Add the States your game has.
 	//	You don't have to do this in the html, it could be done in your Boot state too, but for simplicity I'll keep it here.
 	
-	// An object for shared variables, so that them main menu can show
+	// An object for shared variables, so that the main menu can show
 	// the high score if you want.
 	var shared = {
 		
@@ -26,25 +26,39 @@ window.onload = function() {
 			this.state.team[0] = {
 				name : 'Wolf',
 				lvl : 1,
-				healthLeft : 10,
-				hp : 10,
-				str : 4,
-				mag : 4,
-				def : 4,
-				spd : 4,
+				healthLeft : 50,
+				hp : 50,
+				str : 10,
+				mag : 10,
+				def : 10,
+				spd : 10,
 				sprite : null,
 				background : null,
 				frame : null,
+				statDisplay : null,
 				battleSetup : function(x, y){
 					//	Place the portrait of the wolf for battle purposes.
 					this.background = game.add.button(x, y, 'portraitBackground', dungeon.openFightMenu);
 					this.sprite = game.add.sprite(x, y, 'portraitWolf', 0);
 					this.frame = game.add.sprite(x, y, 'portraitFrame', 0);
+					//	Draw the healthbar
+					var height = 20;
+					var percentHealth = this.healthLeft / this.hp;
+					var frameBuffer = 4;
+					this.statDisplay = game.add.graphics(0,0);
+					this.statDisplay.beginFill(0x1546C0, 1);
+					this.statDisplay.drawRect(x + frameBuffer, (y + this.frame.height) - height, this.frame.width - (2 * frameBuffer), height - frameBuffer);
+					this.statDisplay.beginFill(0x00DB20, 1);
+					this.statDisplay.drawRect(x + frameBuffer, (y + this.frame.height) - height, (this.frame.width - (2 * frameBuffer)) * percentHealth, height - frameBuffer);
 				},
 				battleEnd : function(){
 					this.background.destroy();
 					this.sprite.destroy();
 					this.frame.destroy();
+					this.statDisplay.destroy();
+				},
+				calculateStats(){
+					//	Takes the character level and calculates the stats
 				}
 			};
 			this.state.teamPlace += 1;
