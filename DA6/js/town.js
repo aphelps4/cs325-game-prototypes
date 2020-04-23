@@ -60,7 +60,10 @@ GameStates.makeTown = function( game, shared ) {
             //	Here all we're doing is playing some music and adding a picture and button
             //	Naturally I expect you to do something significantly better :)
     
-            music = game.add.audio('townMusic');
+            if (music != null){
+				music.stop();
+			}
+			music = game.add.audio('townMusic');
 			music.loop = true;
             music.play();
     
