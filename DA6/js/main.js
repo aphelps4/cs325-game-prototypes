@@ -17,7 +17,16 @@ window.onload = function() {
 			
 			team : [null, null, null, null],
 			
-			teamPlace : 0
+			teamPlace : 0,
+			
+			maps : [
+			
+				{
+					name : 'forest1',
+					data : []
+				}
+			
+			]
 			
 		},
 		
@@ -226,10 +235,11 @@ window.onload = function() {
 			this.player.play('still');
 		},
 		
-		move : function(cursors, map, tileSize, enctrChance){
+		move : function(cursors, map, mapAccess, tileSize, enctrChance){
 			//	Move the player if they are allowed to move
 			//	cursors is the key input from the player
 			//	map is the current map the player is on
+			//	mapAccess is for accessing the minimap data in the state for storage purposes
 			//	tileSize is the size of the tiles that make up the map
 			//	enctrChance is the chance of running into enemies
 			//	Return true if the player runs into enemies
@@ -256,11 +266,14 @@ window.onload = function() {
 					if (map.getTileWorldXY(this.player.x, this.player.y).index == town){
 						//	On top of the tile that moves the character to town so do so.
 						game.state.start('Town');
+						return false;
 					}
 					if (map.getTileWorldXY(this.player.x, this.player.y).index == forest2){
 						//	On top of the tile that moves the character to forest2 but that does not exist so go to town
 						game.state.start('Town');
+						return false;
 					}
+					this.storeNearbyMap(map, mapAccess);
 					if (this.randomEncounter(enctrChance)){
 						//	Random encounter here
 						return true;
@@ -277,11 +290,14 @@ window.onload = function() {
 					if (map.getTileWorldXY(this.player.x, this.player.y).index == town){
 						//	On top of the tile that moves the character to town so do so.
 						game.state.start('Town');
+						return false;
 					}
 					if (map.getTileWorldXY(this.player.x, this.player.y).index == forest2){
 						//	On top of the tile that moves the character to forest2 but that does not exist so go to town
 						game.state.start('Town');
+						return false;
 					}
+					this.storeNearbyMap(map, mapAccess);
 					if (this.randomEncounter(enctrChance)){
 						//	Random encounter here
 						return true;
@@ -369,6 +385,25 @@ window.onload = function() {
 			
 			//	Failed the encounter check
 			return false;
+		},
+		
+		storeNearbyMap : function(map, mapAccess){
+			//	Store the tile the player is on and all adjacent tiles in the map data
+			//	Add one to the index when storing since minimap data will have the 0 frame be nothing
+			var tileStore = map.getTileWorldXY(this.player.x, this.player.y);	//	Under player
+			shared.state.maps[mapAccess].data[tileStore.x][tileStore.y] = tileStore.index + 1;
+			tileStore = map.getTileWorldXY(this.player.x, this.player.y - map.tileHeight);	//	Up from player
+			shared.state.maps[mapAccess].data[tileStore.x][tileStore.y] = tileStore.index + 1;
+			tileStore = map.getTileWorldXY(this.player.x + map.tileWidth, this.player.y);	//	Right from player
+			shared.state.maps[mapAccess].data[tileStore.x][tileStore.y] = tileStore.index + 1;
+			tileStore = map.getTileWorldXY(this.player.x, this.player.y + map.tileHeight);	//	Down from player
+			shared.state.maps[mapAccess].data[tileStore.x][tileStore.y] = tileStore.index + 1;
+			tileStore = map.getTileWorldXY(this.player.x - map.tileWidth, this.player.y);	//	Left from player
+			shared.state.maps[mapAccess].data[tileStore.x][tileStore.y] = tileStore.index + 1;
+		},
+		
+		viewMiniMap : function(mapAccess){
+			//	Allow the player to view where they have been on the current map by pressing the button E
 		},
 		
 		randomEncounter : function(chance){

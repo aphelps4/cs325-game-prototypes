@@ -7,6 +7,8 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 	var layer = null;
 	var tileSize = 200;
 	
+	var mapAccess = -1;
+	
 	var enemyList = [];
 	var rndmAmtData = {
 		
@@ -80,12 +82,39 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 				layer.destroy();
 			}
 			
+			//	Create dungeon for player to move through
 			map = game.add.tilemap('forest1Map', tileSize, tileSize);
 			tileset = map.addTilesetImage('forest1Tiles', null, tileSize, tileSize);
 			layer = map.createLayer(0);
 			layer.resizeWorld();
 			
+			//	Set up map data for this floor
+			for (var i = 0; i < shared.state.maps.length; i++){
+				//	Loop through player maps and find the one for this floor
+				if (shared.state.maps[i].name == 'forest1'){
+					//	Found the map, store the number
+					mapAccess = i;
+				}
+			}
+			if (mapAccess == -1){
+				//	Failed to find the map data
+				console.log('Map data not found');
+			}
+			if (shared.state.maps[mapAccess].data.length == 0){
+				//	The maps data has not been initialized yet
+				for (var i = 0; i < map.width; i++){
+					//	Set the x axis of the map
+					var lis = [];
+					for (var j = 0; j < map.height; j++){
+						//	Set the y axis of the map
+						lis.push(0);
+					}
+					shared.state.maps[mapAccess].data.push(lis);
+				}
+			}
+			
 			dungeon.initializePlayer(900, 2700, 'overWorldWolf');
+			dungeon.storeNearbyMap(map, mapAccess);
 			dungeon.player.height = tileSize;
 			dungeon.player.width = tileSize;
 			dungeon.player.angle = -90;
@@ -106,7 +135,7 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 			
 			dungeon.battleOver();
             
-            if (dungeon.move(cursors, map, tileSize, 10)){
+            if (dungeon.move(cursors, map, mapAccess, tileSize, 10)){
 				//	Random encounter occurred
 				dungeon.startBattle(rndmAmtData, rndmLvlData, plcmntData, availableEnemies);
 			}
