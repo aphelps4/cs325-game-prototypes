@@ -41,6 +41,8 @@ GameStates.makePreloader = function( game ) {
 			game.load.spritesheet('overWorldWolf', 'assets/overWorldWolf.png', 156, 156);
 			game.load.image('forest1Tiles', 'assets/forest1Tiles.png');
 			game.load.tilemap('forest1Map', 'assets/forest1Map.csv', null, Phaser.Tilemap.CSV);
+			game.load.image('forest1MiniMapTiles', 'assets/forest1MiniMapTiles.png');
+			game.load.image('playerMiniMapRep', 'assets/playerMiniMapRep.png');
 			
 			//	Battle assets
 			game.load.image('battleBackground', 'assets/battleBackground.png');

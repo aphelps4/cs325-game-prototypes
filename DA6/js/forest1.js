@@ -140,6 +140,8 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 				dungeon.startBattle(rndmAmtData, rndmLvlData, plcmntData, availableEnemies);
 			}
 			
+			//dungeon.viewMiniMap(tileSize, mapAccess);
+			
 			dungeon.moveTimer++;
         }
     };

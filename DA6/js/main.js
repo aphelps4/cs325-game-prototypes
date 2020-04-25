@@ -153,6 +153,8 @@ window.onload = function() {
 		
 		canMove : true,
 		
+		mapGraphics : null,
+		
 		battleData : {
 			
 			battleBackground : null,
@@ -171,6 +173,7 @@ window.onload = function() {
 					//	This is the function for the attack button
 					if (dungeon.battleData.menu != null){
 						dungeon.battleData.menu.destroy();
+						dungeon.battleData.menu = null;
 					}
 					dungeon.waitForFight = true;
 					for (var i = 0; i < dungeon.enemies.length; i++){
@@ -402,8 +405,30 @@ window.onload = function() {
 			shared.state.maps[mapAccess].data[tileStore.x][tileStore.y] = tileStore.index + 1;
 		},
 		
-		viewMiniMap : function(mapAccess){
-			//	Allow the player to view where they have been on the current map by pressing the button E
+		viewMiniMap : function(tileSize, mapAccess){
+			//	Allow the player to view where they have been on the current map by pressing the key E or SHIFT
+			//	TODO make it so they can only view map when locked in the grid
+			var key1 = game.input.keyboard.addKey(Phaser.Keyboard.E);
+			var key2 = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+			if (key1.downDuration(1) || key2.downDuration(1)){
+				if (this.mapGraphics == null || !this.mapGraphics.alive){
+					//	Only draw the map if it has not already been drawn
+					if ((this.player.x - (tileSize/2)) % tileSize == 0 && (this.player.y - (tileSize/2)) % tileSize == 0 &&
+						this.canMove){
+						//	Only let the player view the map if they are not moving or battling
+						this.canMove = false;
+						this.mapGraphics = game.add.graphics(0,0);
+						this.mapGraphics.beginFill(0xCDF4E5, 0.5);
+						this.mapGraphics.drawRect(game.camera.x, game.camera.y, game.camera.width, game.camera.height);
+					}
+				}
+			}
+			else if (key1.isUp && key2.isUp){
+				if (this.mapGraphics != null && this.mapGraphics.alive){
+					this.mapGraphics.destroy();
+					this.canMove = true;
+				}
+			}
 		},
 		
 		randomEncounter : function(chance){
@@ -521,8 +546,11 @@ window.onload = function() {
 		
 		openFightMenu : function(){
 			//	Open the menu required to fight in battle
-			dungeon.battleData.menu = shared.openMenu(game.camera.x, game.camera.y + 200, game.camera.y + 400, 'fightMenu',
-				15, 5, 10, dungeon.battleData);
+			if (dungeon.battleData.menu == null){
+				//	Create a new menu if one has not been established or the last one was destroyed
+				dungeon.battleData.menu = shared.openMenu(game.camera.x, game.camera.y + 200, game.camera.y + 400, 'fightMenu',
+					15, 5, 10, dungeon.battleData);
+			}
 			//	Set it so player can not click on enemies if they are opening the menu again
 			for (var i = 0; i < dungeon.enemies.length; i++){
 				dungeon.enemies[i].sprite.inputEnabled = false;
