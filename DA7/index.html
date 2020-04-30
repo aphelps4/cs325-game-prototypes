@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Phaser Basic Project Template</title>
+	<script src="js/phaser.min.js"></script>
+	<!-- Boot.js must come first since it creates the BasicGame object
+	that stores all the states. -->
+	<script src="js/Boot.js"></script>
+	<script src="js/Preloader.js"></script>
+	<script src="js/MainMenu.js"></script>
+	<script src="js/town.js"></script>
+	<script src="js/Game.js"></script>
+	<script src="js/forest1.js"></script>
+	<!-- main.js must come last since it references the other ones. -->
+	<script src="js/main.js"></script>
+
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+
+</head>
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Eternal Forest</h2>
+
+<ul>
+<li><strong>Originality:</strong>
+It is a dungeon crawler that will let you catch the enemies and use them (eventually).
+</li>
+
+<li><strong>Technical Merit:</strong>
+<ul>
+<li>It is capable of calculating the stats for the main player.</li>
+<li>It shows the health of enemies if you hover over them while in attack mode. The player health is now shown on the portraits as well.</li>
+<li>It now has an experience page after a battle.
+</ul>
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+Getting a UI that feels good with Phaser is a challenge. It is also tricky coming up with stats for the characters of the game
+although a lesson in the math class I am taking this semester made this easier as I can come up with functions if I can determine
+points.
+</li>
+
+<li><strong>Prototype Assets:</strong>
+<ul>
+<li>Fight menu font: Calibri</li>
+<li>Exp menu font: Verdana</li>
+<li>Rest of menu fonts: <a href="http://www.publicdomainfiles.com/show_file.php?id=13487095304649">Black Chancery</a></li>
+<li>Music: self-made through Caustic</li>
+<li>Sound effects: self-made through Bfxr</li>
+<li>Visuals: self-made through paint.net</li>
+</ul>
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+Etrian Odyssey
+</li>
+
+<li><strong>High Concept:</strong>
+Move through a dungeon and fight any monsters that block your way in turn-based combat.
+</li>
+
+<li><strong>Mandated Variety:</strong>
+<ul>
+<li>This game receives input from the arrow keys and the mouse.</li>
+<li>The game generates random numbers when determining how many enemies the player will face and whether the player will be ambushed by enemies when moving.</li>
+<li>The genre of the game is top-down dungeon crawler.</li>
+<li>The play style is explorer and achiever</li>
+</ul>
+</li>
+
+<li><strong>Prototype Goal:</strong>
+Grid based movement, turn-based combat, and UI.
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+I want players to be curious about what they will see in the forest. I want them to be excited to find new characters.
+</li>
+
+<li><strong>Gameplay:</strong>
+When in the dungeon, you use your arrow keys to move around the grid that makes up the world. Occasionally, a monster will pop up and the player will have to fight them in turn based combat where they select their actions and the target by clicking.
+The players have a hub where they can go to and take a break between wandering the dungeon.
+Future: They can use items they found in the dungeon to craft things that will help on their journey. Players will also be able to catch the monsters in the forest once they have a capture item. Players can use this item to build their team with any enemy they are capable of catching in the woods. An auto-map feature will also be included so players can see where they are and where they have been at any time when pausing the game.
+</li>
+
+<li><strong>Strategies:</strong>
+Drawing a map of the dungeon will be helpful for players to know where they have been to before in the forest.
+</li>
+
+<li><strong>Story/Setting/Premise:</strong>
+The premise is that there is a mysterious forest that prevents humans from entering with a magical barrier. The main character discovers that familiars do not count as humans and so sends their familiar wolf in to explore the dungeon, bring back treasures, and gather new information about the forest.
+After befriending their first creature in the forest, a new discovery is made: the barrier also keeps the animals trapped inside. It is up to the player to figure out the meaning of this forbidden forest.
+</li>
+
+<li><strong>Target Audience:</strong>
+Eventually, I want to make it so there are a lot of choices for the player when building their party so the target audience would be players that like managing the characters they control and finding new combinations of teams.
+Currently, there is no difficulty to the game so the target audience would be people that want to experience a grid-based game with ease.
+</li>
+
+<li><strong>Play Time:</strong>
+5 minutes.
+</li>
+
+</ul>
+</div>
+</body>
+</html>
