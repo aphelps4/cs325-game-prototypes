@@ -72,7 +72,7 @@ window.onload = function() {
 					//	Takes the character level and calculates the stats
 					//	hp
 					var health = ((650 / 49) * (this.lvl - 1)) + 50;
-					var healthChange = this.hp - health;
+					var healthChange = health - this.hp;
 					this.hp = health;
 					this.healthLeft += healthChange;
 					//	others
@@ -598,7 +598,19 @@ window.onload = function() {
 					//	Clicking on enemy
 					if (this.enemies[i].sprite.input.justPressed(0, 30)){
 						//	An enemy was chosen so make them receive the damage and make the other enemies unselectable
-						this.enemies[i].sprite.kill();
+						/*this.enemies[i].sprite.kill();
+						if (this.enemies[i].statDisplay != null){
+							this.enemies[i].statDisplay.destroy();
+							this.enemies[i].statDisplay = null;
+						}
+						for (var i = 0; i < dungeon.enemies.length; i++){
+							dungeon.enemies[i].sprite.inputEnabled = false;
+						}*/
+						this.enemies[i].healthLeft -= Math.pow(shared.state.team[0].str, 2)/this.enemies[i].def;
+						if (this.enemies[i].healthLeft <= 0){
+							//	Enemy died so get rid of them
+							this.enemies[i].sprite.kill();
+						}
 						if (this.enemies[i].statDisplay != null){
 							this.enemies[i].statDisplay.destroy();
 							this.enemies[i].statDisplay = null;

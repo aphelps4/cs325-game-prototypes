@@ -46,20 +46,72 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 				//	so we can have multiple of the same type of enemy.
 				var object = {
 					name : this.name,
-					lvl : lvl,
-					healthLeft : lvl * 6,
-					hp : lvl * 6,
-					str : lvl * 2,
-					mag : lvl,
-					def : lvl,
-					spd : lvl * 3,
+					lvl : 1,
+					haveExp : 0,
+					exp : 5,
+					giveExp : 5,
+					healthLeft : 40,
+					hp : 40,
+					str : 8,
+					mag : 2,
+					def : 5,
+					spd : 20,
 					sprite : null,
 					background : null,
 					frame : null,
-					statDisplay : null
+					statDisplay : null,
+					battleSetup : function(x, y){
+						//	Place the portrait of the team member for battle purposes.
+						this.background = game.add.button(x, y, 'portraitBackground', dungeon.openFightMenu);
+						this.sprite = game.add.sprite(x, y, 'portraitRabbit', 0);
+						this.frame = game.add.sprite(x, y, 'portraitFrame', 0);
+						//	Draw the healthbar
+						var height = 20;
+						var percentHealth = this.healthLeft / this.hp;
+						var frameBuffer = 4;
+						this.statDisplay = game.add.graphics(0,0);
+						this.statDisplay.beginFill(0x1546C0, 1);
+						this.statDisplay.drawRect(x + frameBuffer, (y + this.frame.height) - height, this.frame.width - (2 * frameBuffer), height - frameBuffer);
+						this.statDisplay.beginFill(0x00DB20, 1);
+						this.statDisplay.drawRect(x + frameBuffer, (y + this.frame.height) - height, (this.frame.width - (2 * frameBuffer)) * percentHealth, height - frameBuffer);
+					},
+					battleEnd : function(){
+						this.background.destroy();
+						this.sprite.destroy();
+						this.frame.destroy();
+						this.statDisplay.destroy();
+					},
+					calculateStats(){
+						//	Takes the character level and calculates the stats
+						//	hp
+						var health = ((460 / 49) * (this.lvl - 1)) + 40;
+						var healthChange = health - this.hp;
+						this.hp = health;
+						this.healthLeft += healthChange;
+						//	str
+						var stat = ((92 / 49) * (this.lvl - 1)) + 8;
+						this.str = stat;
+						//	mag
+						stat = ((28 / 49) * (this.lvl - 1)) + 2;
+						this.mag = stat;
+						//	def
+						stat = ((65 / 49) * (this.lvl - 1)) + 5;
+						this.def = stat;
+						//	spd
+						stat = ((180 / 49) * (this.lvl - 1)) + 20;
+						this.spd = stat;
+						//giveExp
+						stat = ((5 / 2) * (this.lvl - 1)) + 5;
+						this.giveExp = stat;
+						//	exp
+						stat = (45 * (this.lvl - 1)) + 5;
+						this.exp = stat;
+					}
 				}
 				object.sprite = game.add.sprite(0, 0, 'portraitRabbit', 0);
 				object.sprite.anchor.setTo(0, 1);
+				object.lvl = lvl;
+				object.calculateStats();
 				return object
 			}
 		}
