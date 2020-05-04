@@ -671,6 +671,16 @@ window.onload = function() {
 					this.battling = false;
 					this.canMove = true;*/
 					if (this.expPage.background == null){
+						for (var i = 0; i < this.enemies.length; i++){
+							//	Go through the enemies and get the experience they gave
+							shared.state.team[0].haveExp += this.enemies[i].giveExp;
+							while (shared.state.team[0].haveExp >= shared.state.team[0].exp){
+								//	The player has gotten enough experience to level up
+								shared.state.team[0].haveExp -= shared.state.team[0].exp;
+								shared.state.team[0].lvl += 1;
+								shared.state.team[0].calculateStats();
+							}
+						}
 						this.expMenu();
 						
 						//	Destroy the team portraits
@@ -721,7 +731,8 @@ window.onload = function() {
 				//	Experience
 				var height = 25;
 				var width = 400;
-				var percentExp = 1 / 2;	//	Change this to be the teams experience over needed experience
+				//var percentExp = 1 / 2;	//	Change this to be the teams experience over needed experience
+				var percentExp = shared.state.team[i].haveExp / shared.state.team[i].exp;//TODO
 				this.expPage.barData.beginFill(0x1546C0, 1);
 				this.expPage.barData.drawRect(xplace, yplace + height, width, height);
 				this.expPage.barData.beginFill(0x5EE2C5, 1);
