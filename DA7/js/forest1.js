@@ -10,6 +10,7 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 	var mapAccess = -1;
 	var miniTileSize = 40;
 	
+	var enctrChance = 20;
 	var enemyList = [];
 	var rndmAmtData = {
 		
@@ -188,7 +189,7 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 			
 			dungeon.battleOver();
             
-            if (dungeon.move(cursors, map, mapAccess, tileSize, 10)){
+            if (dungeon.move(cursors, map, mapAccess, tileSize, enctrChance)){
 				//	Random encounter occurred
 				dungeon.startBattle(rndmAmtData, rndmLvlData, plcmntData, availableEnemies);
 			}

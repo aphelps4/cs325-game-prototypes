@@ -151,6 +151,8 @@ window.onload = function() {
 		
 		direction : 0,
 		
+		moveCount : 0,
+		
 		canMove : true,
 		
 		miniMap : {
@@ -260,6 +262,9 @@ window.onload = function() {
 			//	Store the change scene numbers here for now, will need to add a list to parameters later
 			var town = 3;
 			var forest2 = 5;
+			//	Store min move to see encounters and max to force encounters
+			var min = 2;
+			var max = 5;
 			
 			
 			//	Divisor must evenly divide the tileSize or else this will not work - can possibly fix by checking if within the range of moveLength
@@ -283,8 +288,15 @@ window.onload = function() {
 						return false;
 					}
 					this.storeNearbyMap(map, mapAccess);
-					if (this.randomEncounter(enctrChance)){
-						//	Random encounter here
+					if (this.moveCount > min){
+						if (this.randomEncounter(enctrChance)){
+							//	Random encounter here
+							this.moveCount = 0;
+							return true;
+						}
+					}
+					if (this.moveCount >= max){
+						this.moveCount = 0;
 						return true;
 					}
 				}
@@ -307,8 +319,15 @@ window.onload = function() {
 						return false;
 					}
 					this.storeNearbyMap(map, mapAccess);
-					if (this.randomEncounter(enctrChance)){
-						//	Random encounter here
+					if (this.moveCount > min){
+						if (this.randomEncounter(enctrChance)){
+							//	Random encounter here
+							this.moveCount = 0;
+							return true;
+						}
+					}
+					if (this.moveCount >= max){
+						this.moveCount = 0;
 						return true;
 					}
 				}
@@ -330,6 +349,7 @@ window.onload = function() {
 				}
 				else{
 					this.player.x -= moveLength;
+					this.moveCount++;
 					this.player.play('moving');
 					this.direction = -1;
 				}
@@ -348,6 +368,7 @@ window.onload = function() {
 				}
 				else{
 					this.player.x += moveLength;
+					this.moveCount++;
 					this.player.play('moving');
 					this.direction = 1;
 				}
@@ -367,6 +388,7 @@ window.onload = function() {
 				}
 				else{
 					this.player.y -= moveLength;
+					this.moveCount++;
 					this.player.play('moving');
 					this.direction = -1;
 				}
@@ -386,6 +408,7 @@ window.onload = function() {
 				}
 				else{
 					this.player.y += moveLength;
+					this.moveCount++;
 					this.player.play('moving');
 					this.direction = 1;
 				}
@@ -731,8 +754,7 @@ window.onload = function() {
 				//	Experience
 				var height = 25;
 				var width = 400;
-				//var percentExp = 1 / 2;	//	Change this to be the teams experience over needed experience
-				var percentExp = shared.state.team[i].haveExp / shared.state.team[i].exp;//TODO
+				var percentExp = shared.state.team[i].haveExp / shared.state.team[i].exp;
 				this.expPage.barData.beginFill(0x1546C0, 1);
 				this.expPage.barData.drawRect(xplace, yplace + height, width, height);
 				this.expPage.barData.beginFill(0x5EE2C5, 1);
