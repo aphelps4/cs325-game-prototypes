@@ -183,7 +183,6 @@ window.onload = function() {
 						dungeon.battleData.menu.destroy();
 						dungeon.battleData.menu = null;
 					}
-					dungeon.waitForFight = true;
 					for (var i = 0; i < dungeon.enemies.length; i++){
 						//	Allow enemies to receive input
 						dungeon.enemies[i].sprite.inputEnabled = true;
@@ -229,13 +228,6 @@ window.onload = function() {
 			//	x will be the x position, y will be the y position
 			//	sprite will be a string to get the specific sprite
 			
-			/*if (this.player == null){
-				this.player = game.add.sprite(x, y, sprite, 0);
-				this.player.animations.add('still', [0]);
-				this.player.animations.add('moving', [1,2,3,0], 8, true);
-				this.player.play('still');
-			}
-			else{*/
 			if (this.player != null){
 				//	Destroy the past player object before we replace it
 				this.player.destroy();
@@ -621,14 +613,6 @@ window.onload = function() {
 					//	Clicking on enemy
 					if (this.enemies[i].sprite.input.justPressed(0, 30)){
 						//	An enemy was chosen so make them receive the damage and make the other enemies unselectable
-						/*this.enemies[i].sprite.kill();
-						if (this.enemies[i].statDisplay != null){
-							this.enemies[i].statDisplay.destroy();
-							this.enemies[i].statDisplay = null;
-						}
-						for (var i = 0; i < dungeon.enemies.length; i++){
-							dungeon.enemies[i].sprite.inputEnabled = false;
-						}*/
 						this.enemies[i].healthLeft -= Math.pow(shared.state.team[0].str, 2)/this.enemies[i].def;
 						if (this.enemies[i].healthLeft <= 0){
 							//	Enemy died so get rid of them
@@ -643,17 +627,19 @@ window.onload = function() {
 						}
 					}
 					//	Hovering over an enemy
-					else if (this.enemies[i].sprite.input.justOver(0, 30)){
+					else if (this.enemies[i].sprite.input.justOver(0, 60)){
 						//	Display the health of the enemy so the player knows if they want to attack that one
 						var x = this.enemies[i].sprite.x;
 						var y = this.enemies[i].sprite.y;
 						var height = 10;
 						var percentHealth = this.enemies[i].healthLeft / this.enemies[i].hp;
-						this.enemies[i].statDisplay = game.add.graphics(0,0);
-						this.enemies[i].statDisplay.beginFill(0x1546C0, 1);
-						this.enemies[i].statDisplay.drawRect(x, y - (this.enemies[i].sprite.height + height), this.enemies[i].sprite.width, height);
-						this.enemies[i].statDisplay.beginFill(0x00DB20, 1);
-						this.enemies[i].statDisplay.drawRect(x, y - (this.enemies[i].sprite.height + height), this.enemies[i].sprite.width * percentHealth, height);
+						if (this.enemies[i].statDisplay == null){
+							this.enemies[i].statDisplay = game.add.graphics(0,0);
+							this.enemies[i].statDisplay.beginFill(0x1546C0, 1);
+							this.enemies[i].statDisplay.drawRect(x, y - (this.enemies[i].sprite.height + height), this.enemies[i].sprite.width, height);
+							this.enemies[i].statDisplay.beginFill(0x00DB20, 1);
+							this.enemies[i].statDisplay.drawRect(x, y - (this.enemies[i].sprite.height + height), this.enemies[i].sprite.width * percentHealth, height);
+						}
 					}
 					//	No longer hovering over an enemy
 					else if (this.enemies[i].sprite.input.justOut(0, 30)){
@@ -678,30 +664,17 @@ window.onload = function() {
 					}
 				}
 				if (dead == this.enemies.length){
-					/*
-					//	All enemies are dead, battle is over
-					this.battleBackground.destroy();
-					//	Destroy the enemies.
-					for (var i = 0; i < this.enemies.length; i++){
-						this.enemies[i].sprite.destroy();
-					}
-					this.enemies = [];
-					//	Destroy the team portraits
-					for (var i = 0; i < shared.state.teamPlace; i++){
-						shared.state.team[i].battleEnd();
-					}
-					//	End battling and allow player to move again
-					this.battling = false;
-					this.canMove = true;*/
 					if (this.expPage.background == null){
 						for (var i = 0; i < this.enemies.length; i++){
 							//	Go through the enemies and get the experience they gave
-							shared.state.team[0].haveExp += this.enemies[i].giveExp;
-							while (shared.state.team[0].haveExp >= shared.state.team[0].exp){
-								//	The player has gotten enough experience to level up
-								shared.state.team[0].haveExp -= shared.state.team[0].exp;
-								shared.state.team[0].lvl += 1;
-								shared.state.team[0].calculateStats();
+							for (var member = 0; member < shared.state.teamPlace; member++){
+								shared.state.team[member].haveExp += this.enemies[i].giveExp;
+								while (shared.state.team[member].haveExp >= shared.state.team[member].exp){
+									//	The player has gotten enough experience to level up
+									shared.state.team[member].haveExp -= shared.state.team[member].exp;
+									shared.state.team[member].lvl += 1;
+									shared.state.team[member].calculateStats();
+								}
 							}
 						}
 						this.expMenu();
