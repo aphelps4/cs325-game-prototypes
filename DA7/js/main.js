@@ -19,6 +19,10 @@ window.onload = function() {
 			
 			teamPlace : 0,
 			
+			friends : [],
+			
+			inventory : [],
+			
 			maps : [
 			
 				{
@@ -30,9 +34,9 @@ window.onload = function() {
 			
 		},
 		
-		load : function(){
+		startNew : function(){
 			//	Set up the game for the player.
-			this.state.team[0] = {
+			/*this.state.team[0] = {
 				name : 'Wolf',
 				lvl : 1,
 				haveExp : 0,
@@ -47,9 +51,10 @@ window.onload = function() {
 				background : null,
 				frame : null,
 				statDisplay : null,
-				battleSetup : function(x, y){
+				battleSetup : function(x, y, place){
 					//	Place the portrait of the wolf for battle purposes.
-					this.background = game.add.button(x, y, 'portraitBackground', dungeon.openFightMenu);
+					//this.background = game.add.button(x, y, 'portraitBackground', dungeon.openFightMenu);
+					this.background = game.add.button(x, y, 'portraitBackground', function(){dungeon.openFightMenu(place)});
 					this.sprite = game.add.sprite(x, y, 'portraitWolf', 0);
 					this.frame = game.add.sprite(x, y, 'portraitFrame', 0);
 					//	Draw the healthbar
@@ -85,6 +90,18 @@ window.onload = function() {
 					stat = (45 * (this.lvl - 1)) + 5;
 					this.exp = stat;
 				}
+			};*/
+			this.state.team[0] = {
+				name : 'Wolf',
+				lvl : 1,
+				haveExp : 0,
+				exp : 5,
+				healthLeft : 50,
+				hp : 50,
+				str : 10,
+				mag : 10,
+				def : 10,
+				spd : 10
 			};
 			this.state.teamPlace += 1;
 		},
@@ -165,6 +182,8 @@ window.onload = function() {
 		
 		battleData : {
 			
+			member : null,
+			
 			battleBackground : null,
 			
 			menu : null,
@@ -196,9 +215,21 @@ window.onload = function() {
 		
 		battleBackground : null,
 		
+		battleFunctions : [null, null, null, null],
+		
 		enemies : [],
 		
 		battling : false,
+		
+		prepareAttack : {
+			
+			attacker : 0,
+			
+			defender : 0
+			
+		},
+		
+		teamAttacks : [],
 		
 		expPage : {
 			
@@ -236,6 +267,68 @@ window.onload = function() {
 			this.player.animations.add('still', [0]);
 			this.player.animations.add('moving', [1,2,3,0], 8, true);
 			this.player.play('still');
+			
+			//	Set up the battle functions for the team - TODO change this later to possibly pull from a database
+			this.battleFunctions[0] = {
+				
+				sprite : null,
+				background : null,
+				frame : null,
+				statDisplay : null,
+				battleSetup : function(x, y, place){
+					//	Place the portrait of the wolf for battle purposes.
+					this.background = game.add.button(x, y, 'portraitBackground', function(){dungeon.openFightMenu(place)});
+					this.sprite = game.add.sprite(x, y, 'portraitWolf', 0);
+					this.frame = game.add.sprite(x, y, 'portraitFrame', 0);
+					//	Draw the healthbar
+					var height = 20;
+					var percentHealth = shared.state.team[0].healthLeft / shared.state.team[0].hp;
+					var frameBuffer = 4;
+					this.statDisplay = game.add.graphics(0,0);
+					this.statDisplay.beginFill(0x1546C0, 1);
+					this.statDisplay.drawRect(x + frameBuffer, (y + this.frame.height) - height, this.frame.width - (2 * frameBuffer), height - frameBuffer);
+					this.statDisplay.beginFill(0x00DB20, 1);
+					this.statDisplay.drawRect(x + frameBuffer, (y + this.frame.height) - height, (this.frame.width - (2 * frameBuffer)) * percentHealth, height - frameBuffer);
+				},
+				battleEnd : function(){
+					this.background.destroy();
+					this.sprite.destroy();
+					this.frame.destroy();
+					this.statDisplay.destroy();
+				},
+				calculateStats(){
+					//	Takes the character level and calculates the stats
+					/*//	hp
+					var health = ((650 / 49) * (this.lvl - 1)) + 50;
+					var healthChange = health - this.hp;
+					this.hp = health;
+					this.healthLeft += healthChange;
+					//	others
+					var stat = ((110 / 49) * (this.lvl - 1)) + 10;
+					this.str = stat;
+					this.mag = stat;
+					this.def = stat;
+					this.spd = stat;
+					//	exp
+					stat = (45 * (this.lvl - 1)) + 5;
+					this.exp = stat;*/
+					//	hp
+					var health = ((650 / 49) * (shared.state.team[0].lvl - 1)) + 50;
+					var healthChange = health - shared.state.team[0].hp;
+					shared.state.team[0].hp = health;
+					shared.state.team[0].healthLeft += healthChange;
+					//	others
+					var stat = ((110 / 49) * (shared.state.team[0].lvl - 1)) + 10;
+					shared.state.team[0].str = stat;
+					shared.state.team[0].mag = stat;
+					shared.state.team[0].def = stat;
+					shared.state.team[0].spd = stat;
+					//	exp
+					stat = (45 * (shared.state.team[0].lvl - 1)) + 5;
+					shared.state.team[0].exp = stat;
+				}
+				
+			}
 		},
 		
 		move : function(cursors, map, mapAccess, tileSize, enctrChance){
@@ -516,8 +609,8 @@ window.onload = function() {
 			var overallWidth = width * shared.state.teamPlace;
 			var xplace = (this.battleBackground.x) - (overallWidth/2);	//	Middle of page then up half the overall height
 			for (var i = 0; i < shared.state.teamPlace; i++){
-				//	Randomly create an enemy from available encounters and place it
-				shared.state.team[i].battleSetup(xplace, (this.battleBackground.y + 110));
+				//	Plac the team members
+				dungeon.battleFunctions[i].battleSetup(xplace, (this.battleBackground.y + 110), i);
 				xplace += width + buffer;
 			}
 			
@@ -593,8 +686,9 @@ window.onload = function() {
 			}
 		},
 		
-		openFightMenu : function(){
+		openFightMenu : function(place){
 			//	Open the menu required to fight in battle
+			dungeon.prepareAttack.attacker = place;
 			if (dungeon.battleData.menu == null){
 				//	Create a new menu if one has not been established or the last one was destroyed
 				dungeon.battleData.menu = shared.openMenu(game.camera.x, game.camera.y + 200, game.camera.y + 400, 'fightMenu',
@@ -613,10 +707,19 @@ window.onload = function() {
 					//	Clicking on enemy
 					if (this.enemies[i].sprite.input.justPressed(0, 30)){
 						//	An enemy was chosen so make them receive the damage and make the other enemies unselectable
-						this.enemies[i].healthLeft -= Math.pow(shared.state.team[0].str, 2)/this.enemies[i].def;
-						if (this.enemies[i].healthLeft <= 0){
-							//	Enemy died so get rid of them
-							this.enemies[i].sprite.kill();
+						this.prepareAttack.defender = i;
+						this.teamAttacks.push(this.prepareAttack);
+						//	TODO - may want to move stuff below into a new function that checks for all memebers having an action
+						if (this.teamAttacks.length >= shared.state.teamPlace){
+							//	An action has been chosen for all the teammembers
+							for (var atkCnt = 0; atkCnt < this.teamAttacks.length; atkCnt++){
+								var attack = this.teamAttacks.pop(atkCnt);
+								this.enemies[attack.defender].healthLeft -= Math.pow(shared.state.team[attack.attacker].str, 2)/this.enemies[attack.defender].def;
+								if (this.enemies[i].healthLeft <= 0){
+									//	Enemy died so get rid of them
+									this.enemies[i].sprite.kill();
+								}
+							}
 						}
 						if (this.enemies[i].statDisplay != null){
 							this.enemies[i].statDisplay.destroy();
@@ -642,7 +745,7 @@ window.onload = function() {
 						}
 					}
 					//	No longer hovering over an enemy
-					else if (this.enemies[i].sprite.input.justOut(0, 30)){
+					else if (this.enemies[i].sprite.input.justOut(0, 60)){
 						//	Delete the display of health
 						if (this.enemies[i].statDisplay != null){
 							this.enemies[i].statDisplay.destroy();
@@ -673,7 +776,7 @@ window.onload = function() {
 									//	The player has gotten enough experience to level up
 									shared.state.team[member].haveExp -= shared.state.team[member].exp;
 									shared.state.team[member].lvl += 1;
-									shared.state.team[member].calculateStats();
+									dungeon.battleFunctions[member].calculateStats();
 								}
 							}
 						}
@@ -681,7 +784,7 @@ window.onload = function() {
 						
 						//	Destroy the team portraits
 						for (var i = 0; i < shared.state.teamPlace; i++){
-							shared.state.team[i].battleEnd();
+							dungeon.battleFunctions[i].battleEnd();
 						}
 					}
 					else if (game.input.activePointer.justPressed(30)){

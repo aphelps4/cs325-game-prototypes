@@ -22,6 +22,7 @@ GameStates.makePreloader = function( game ) {
 			
 			//	Title menu assets
 			game.load.image('titleScreen', 'assets/titleScreen.png');
+			game.load.atlas('continueButton', 'assets/continueButton.png', 'assets/menuButton.json');
 			game.load.atlas('startNewButton', 'assets/startNewButton.png', 'assets/menuButton.json');
     
             //	Here we load the rest of the assets our game needs.

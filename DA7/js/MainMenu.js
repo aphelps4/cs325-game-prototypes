@@ -9,6 +9,8 @@ GameStates.makeMainMenu = function( game, shared ) {
 	var menuData = {
 		
 		menuButtons : [
+		
+		'continueButton',
 	
 		'startNewButton'
 		
@@ -17,8 +19,20 @@ GameStates.makeMainMenu = function( game, shared ) {
 		buttonFunctions : [
 		
 			function(){
+				//	This is the function for loading a saved game
+				var stateStore = JSON.parse(localStorage.getItem('save'));
+				if (stateStore != null){
+					//	We go a valid state back so there was a save
+					shared.state = stateStore;
+					menu.destroy();
+					music.stop();
+					game.state.start('Town');
+				}
+			},
+		
+			function(){
 				//	This is the function for starting a new game.
-				shared.load();
+				shared.startNew();
 				menu.destroy();
 				music.stop();
 				game.state.start('Town');

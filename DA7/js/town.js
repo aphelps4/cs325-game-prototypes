@@ -10,6 +10,8 @@ GameStates.makeTown = function( game, shared ) {
 		
 		menuButtons : [
 		
+		'saveButton',
+		
 		'restButton',
 	
 		'forestButton'
@@ -17,6 +19,11 @@ GameStates.makeTown = function( game, shared ) {
 		],
 	
 		buttonFunctions : [
+		
+			function(){
+				//	This is the function for saving the game
+				localStorage.setItem('save', JSON.stringify(shared.state));
+			},
 		
 			function(){
 				//	This is the function for healing the party
