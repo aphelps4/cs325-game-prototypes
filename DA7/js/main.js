@@ -9,6 +9,136 @@ window.onload = function() {
 	//	Add the States your game has.
 	//	You don't have to do this in the html, it could be done in your Boot state too, but for simplicity I'll keep it here.
 	
+	var battleStats = [
+	
+		{
+			name : 'Wolf',
+			lvl : 1,
+			haveExp : 0,
+			exp : 5,
+			healthLeft : 50,
+			hp : 50,
+			str : 10,
+			mag : 10,
+			def : 10,
+			spd : 10,
+			battleSetup : function(x, y, place){
+				//	Place the portrait of the wolf for battle purposes.
+				var portrait = {
+					background : null,
+					sprite : null,
+					frame : null,
+					statDisplay : null
+				}
+				portrait.background = game.add.button(x, y, 'portraitBackground', function(){dungeon.openFightMenu(place)});
+				portrait.sprite = game.add.sprite(x, y, 'portraitWolf', 0);
+				portrait.frame = game.add.sprite(x, y, 'portraitFrame', 0);
+				//	Draw the healthbar
+				var height = 20;
+				var percentHealth = this.healthLeft / this.hp;
+				var frameBuffer = 4;
+				portrait.statDisplay = game.add.graphics(0,0);
+				portrait.statDisplay.beginFill(0x1546C0, 1);
+				portrait.statDisplay.drawRect(x + frameBuffer, (y + portrait.frame.height) - height, portrait.frame.width - (2 * frameBuffer), height - frameBuffer);
+				portrait.statDisplay.beginFill(0x00DB20, 1);
+				portrait.statDisplay.drawRect(x + frameBuffer, (y + portrait.frame.height) - height, (portrait.frame.width - (2 * frameBuffer)) * percentHealth, height - frameBuffer);
+				return portrait;
+			},
+			battleEnd : function(portrait){
+				portrait.background.destroy();
+				portrait.sprite.destroy();
+				portrait.frame.destroy();
+				portrait.statDisplay.destroy();
+			},
+			calculateStats(){
+				//	Takes the character level and calculates the stats
+				//	hp
+				var health = ((650 / 49) * (this.lvl - 1)) + 50;
+				var healthChange = health - this.hp;
+				this.hp = health;
+				this.healthLeft += healthChange;
+				//	others
+				var stat = ((110 / 49) * (this.lvl - 1)) + 10;
+				this.str = stat;
+				this.mag = stat;
+				this.def = stat;
+				this.spd = stat;
+				//	exp
+				stat = (45 * (this.lvl - 1)) + 5;
+				this.exp = stat;
+			}
+		},
+		
+		{
+			name : 'Rabbit',
+			lvl : 1,
+			haveExp : 0,
+			exp : 5,
+			giveExp : 5,
+			healthLeft : 40,
+			hp : 40,
+			str : 8,
+			mag : 2,
+			def : 5,
+			spd : 20,
+			battleSetup : function(x, y, place){
+				//	Place the portrait of the team member for battle purposes.
+				var portrait = {
+					background : null,
+					sprite : null,
+					frame : null,
+					statDisplay : null
+				}
+				portrait.background = game.add.button(x, y, 'portraitBackground', function(){dungeon.openFightMenu(place)});
+				portrait.sprite = game.add.sprite(x, y, 'portraitRabbit', 0);
+				portrait.frame = game.add.sprite(x, y, 'portraitFrame', 0);
+				//	Draw the healthbar
+				var height = 20;
+				var percentHealth = this.healthLeft / this.hp;
+				var frameBuffer = 4;
+				portrait.statDisplay = game.add.graphics(0,0);
+				portrait.statDisplay.beginFill(0x1546C0, 1);
+				portrait.statDisplay.drawRect(x + frameBuffer, (y + portrait.frame.height) - height, portrait.frame.width - (2 * frameBuffer), height - frameBuffer);
+				portrait.statDisplay.beginFill(0x00DB20, 1);
+				portrait.statDisplay.drawRect(x + frameBuffer, (y + portrait.frame.height) - height, (portrait.frame.width - (2 * frameBuffer)) * percentHealth, height - frameBuffer);
+				return portrait;
+			},
+			battleEnd : function(portrait){
+				portrait.background.destroy();
+				portrait.sprite.destroy();
+				portrait.frame.destroy();
+				portrait.statDisplay.destroy();
+			},
+			calculateStats(){
+				//	Takes the character level and calculates the stats
+				//	hp
+				var health = ((460 / 49) * (this.lvl - 1)) + 40;
+				var healthChange = health - this.hp;
+				this.hp = health;
+				this.healthLeft += healthChange;
+				//	str
+				var stat = ((92 / 49) * (this.lvl - 1)) + 8;
+				this.str = stat;
+				//	mag
+				stat = ((28 / 49) * (this.lvl - 1)) + 2;
+				this.mag = stat;
+				//	def
+				stat = ((65 / 49) * (this.lvl - 1)) + 5;
+				this.def = stat;
+				//	spd
+				stat = ((180 / 49) * (this.lvl - 1)) + 20;
+				this.spd = stat;
+				//giveExp
+				stat = ((5 / 2) * (this.lvl - 1)) + 5;
+				this.giveExp = stat;
+				//	exp
+				stat = (45 * (this.lvl - 1)) + 5;
+				this.exp = stat;
+			}
+		}
+	
+	];
+	
 	// An object for shared variables, so that the main menu can show
 	// the high score if you want.
 	var shared = {
@@ -36,63 +166,9 @@ window.onload = function() {
 		
 		startNew : function(){
 			//	Set up the game for the player.
-			/*this.state.team[0] = {
-				name : 'Wolf',
-				lvl : 1,
-				haveExp : 0,
-				exp : 5,
-				healthLeft : 50,
-				hp : 50,
-				str : 10,
-				mag : 10,
-				def : 10,
-				spd : 10,
-				sprite : null,
-				background : null,
-				frame : null,
-				statDisplay : null,
-				battleSetup : function(x, y, place){
-					//	Place the portrait of the wolf for battle purposes.
-					//this.background = game.add.button(x, y, 'portraitBackground', dungeon.openFightMenu);
-					this.background = game.add.button(x, y, 'portraitBackground', function(){dungeon.openFightMenu(place)});
-					this.sprite = game.add.sprite(x, y, 'portraitWolf', 0);
-					this.frame = game.add.sprite(x, y, 'portraitFrame', 0);
-					//	Draw the healthbar
-					var height = 20;
-					var percentHealth = this.healthLeft / this.hp;
-					var frameBuffer = 4;
-					this.statDisplay = game.add.graphics(0,0);
-					this.statDisplay.beginFill(0x1546C0, 1);
-					this.statDisplay.drawRect(x + frameBuffer, (y + this.frame.height) - height, this.frame.width - (2 * frameBuffer), height - frameBuffer);
-					this.statDisplay.beginFill(0x00DB20, 1);
-					this.statDisplay.drawRect(x + frameBuffer, (y + this.frame.height) - height, (this.frame.width - (2 * frameBuffer)) * percentHealth, height - frameBuffer);
-				},
-				battleEnd : function(){
-					this.background.destroy();
-					this.sprite.destroy();
-					this.frame.destroy();
-					this.statDisplay.destroy();
-				},
-				calculateStats(){
-					//	Takes the character level and calculates the stats
-					//	hp
-					var health = ((650 / 49) * (this.lvl - 1)) + 50;
-					var healthChange = health - this.hp;
-					this.hp = health;
-					this.healthLeft += healthChange;
-					//	others
-					var stat = ((110 / 49) * (this.lvl - 1)) + 10;
-					this.str = stat;
-					this.mag = stat;
-					this.def = stat;
-					this.spd = stat;
-					//	exp
-					stat = (45 * (this.lvl - 1)) + 5;
-					this.exp = stat;
-				}
-			};*/
 			this.state.team[0] = {
 				name : 'Wolf',
+				id : 0,
 				lvl : 1,
 				haveExp : 0,
 				exp : 5,
@@ -215,7 +291,7 @@ window.onload = function() {
 		
 		battleBackground : null,
 		
-		battleFunctions : [null, null, null, null],
+		battleSprites : [null, null, null, null],
 		
 		enemies : [],
 		
@@ -268,66 +344,11 @@ window.onload = function() {
 			this.player.animations.add('moving', [1,2,3,0], 8, true);
 			this.player.play('still');
 			
-			//	Set up the battle functions for the team - TODO change this later to possibly pull from a database
-			this.battleFunctions[0] = {
-				
-				sprite : null,
-				background : null,
-				frame : null,
-				statDisplay : null,
-				battleSetup : function(x, y, place){
-					//	Place the portrait of the wolf for battle purposes.
-					this.background = game.add.button(x, y, 'portraitBackground', function(){dungeon.openFightMenu(place)});
-					this.sprite = game.add.sprite(x, y, 'portraitWolf', 0);
-					this.frame = game.add.sprite(x, y, 'portraitFrame', 0);
-					//	Draw the healthbar
-					var height = 20;
-					var percentHealth = shared.state.team[0].healthLeft / shared.state.team[0].hp;
-					var frameBuffer = 4;
-					this.statDisplay = game.add.graphics(0,0);
-					this.statDisplay.beginFill(0x1546C0, 1);
-					this.statDisplay.drawRect(x + frameBuffer, (y + this.frame.height) - height, this.frame.width - (2 * frameBuffer), height - frameBuffer);
-					this.statDisplay.beginFill(0x00DB20, 1);
-					this.statDisplay.drawRect(x + frameBuffer, (y + this.frame.height) - height, (this.frame.width - (2 * frameBuffer)) * percentHealth, height - frameBuffer);
-				},
-				battleEnd : function(){
-					this.background.destroy();
-					this.sprite.destroy();
-					this.frame.destroy();
-					this.statDisplay.destroy();
-				},
-				calculateStats(){
-					//	Takes the character level and calculates the stats
-					/*//	hp
-					var health = ((650 / 49) * (this.lvl - 1)) + 50;
-					var healthChange = health - this.hp;
-					this.hp = health;
-					this.healthLeft += healthChange;
-					//	others
-					var stat = ((110 / 49) * (this.lvl - 1)) + 10;
-					this.str = stat;
-					this.mag = stat;
-					this.def = stat;
-					this.spd = stat;
-					//	exp
-					stat = (45 * (this.lvl - 1)) + 5;
-					this.exp = stat;*/
-					//	hp
-					var health = ((650 / 49) * (shared.state.team[0].lvl - 1)) + 50;
-					var healthChange = health - shared.state.team[0].hp;
-					shared.state.team[0].hp = health;
-					shared.state.team[0].healthLeft += healthChange;
-					//	others
-					var stat = ((110 / 49) * (shared.state.team[0].lvl - 1)) + 10;
-					shared.state.team[0].str = stat;
-					shared.state.team[0].mag = stat;
-					shared.state.team[0].def = stat;
-					shared.state.team[0].spd = stat;
-					//	exp
-					stat = (45 * (shared.state.team[0].lvl - 1)) + 5;
-					shared.state.team[0].exp = stat;
-				}
-				
+			//	Set up the functions for the team
+			for (var i = 0; i < shared.state.teamPlace; i++){
+				shared.state.team[i].battleSetup = battleStats[shared.state.team[i].id].battleSetup;
+				shared.state.team[i].battleEnd = battleStats[shared.state.team[i].id].battleEnd;
+				shared.state.team[i].calculateStats = battleStats[shared.state.team[i].id].calculateStats;
 			}
 		},
 		
@@ -596,10 +617,6 @@ window.onload = function() {
 			this.battleBackground.anchor.setTo(0.5, 0.5);
 			
 			//	Make enemies
-			//var enemyAmount = game.rnd.between(minEnemies, maxEnemies);
-			//var enemyAmount = generateEnemyAmount();
-			//enemyList.length = enemyAmount;
-			//spawnEnemies(enemyAmount);
 			this.spawnEnemies(rndmAmtData, rndmLvlData, plcmntData, availableEnemies);
 			
 			//	Place the players team for user input.
@@ -609,8 +626,8 @@ window.onload = function() {
 			var overallWidth = width * shared.state.teamPlace;
 			var xplace = (this.battleBackground.x) - (overallWidth/2);	//	Middle of page then up half the overall height
 			for (var i = 0; i < shared.state.teamPlace; i++){
-				//	Plac the team members
-				dungeon.battleFunctions[i].battleSetup(xplace, (this.battleBackground.y + 110), i);
+				//	Place the team members
+				dungeon.battleSprites[i] = shared.state.team[i].battleSetup(xplace, (this.battleBackground.y + 110), i);
 				xplace += width + buffer;
 			}
 			
@@ -671,7 +688,7 @@ window.onload = function() {
 			for (var i = 0; i < enemyAmount; i++){
 				//	Randomly create an enemy from available encounters and place it
 				var choice = game.rnd.between(0, (availableEnemies.length - 1));
-				var enemy = availableEnemies[choice].calculateStats(1);
+				var enemy = availableEnemies[choice](1);
 				enemy.sprite.x = xplace;
 				if (i % 2 == 0){
 					//	Place the enemy in the back if they are even
@@ -776,7 +793,7 @@ window.onload = function() {
 									//	The player has gotten enough experience to level up
 									shared.state.team[member].haveExp -= shared.state.team[member].exp;
 									shared.state.team[member].lvl += 1;
-									dungeon.battleFunctions[member].calculateStats();
+									shared.state.team[member].calculateStats();
 								}
 							}
 						}
@@ -784,7 +801,7 @@ window.onload = function() {
 						
 						//	Destroy the team portraits
 						for (var i = 0; i < shared.state.teamPlace; i++){
-							dungeon.battleFunctions[i].battleEnd();
+							shared.state.team[i].battleEnd(dungeon.battleSprites[i]);
 						}
 					}
 					else if (game.input.activePointer.justPressed(30)){
