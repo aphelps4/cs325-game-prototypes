@@ -6,6 +6,7 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 	var tileset = null;
 	var layer = null;
 	var tileSize = 200;
+	var exits = [{index: 3, loc: 'Town'}, {index: 5, loc: 'Town'}];
 	
 	var mapAccess = -1;
 	var miniTileSize = 40;
@@ -156,6 +157,10 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 			
 			//	Phaser.Input.Keyboard.JustDown for when you want just one press registered
 			cursors = game.input.keyboard.createCursorKeys();
+			cursors.w = game.input.keyboard.addKey(Phaser.Keyboard.W);
+			cursors.a = game.input.keyboard.addKey(Phaser.Keyboard.A);
+			cursors.s = game.input.keyboard.addKey(Phaser.Keyboard.S);
+			cursors.d = game.input.keyboard.addKey(Phaser.Keyboard.D);
 			pointer = game.input.activePointer;
         },
     
@@ -167,7 +172,7 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 			
 			dungeon.battleOver();
             
-            if (dungeon.move(cursors, map, mapAccess, tileSize, enctrChance)){
+            if (dungeon.move(cursors, map, exits, mapAccess, tileSize, enctrChance)){
 				//	Random encounter occurred
 				dungeon.startBattle(rndmAmtData, rndmLvlData, plcmntData, availableEnemies);
 			}

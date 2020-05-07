@@ -282,7 +282,7 @@ window.onload = function() {
 						//	Allow enemies to receive input
 						dungeon.enemies[i].sprite.inputEnabled = true;
 					}
-					dungeon.battling = true;
+					//dungeon.battling = true;
 				}
 			
 			]
@@ -295,7 +295,7 @@ window.onload = function() {
 		
 		enemies : [],
 		
-		battling : false,
+		//battling : false,
 		
 		prepareAttack : {
 			
@@ -315,6 +315,8 @@ window.onload = function() {
 			
 			barData : null,
 			
+			lvl : [],
+			
 			destroy : function(){
 				if (this.background != null){
 					this.background.destroy();
@@ -325,6 +327,9 @@ window.onload = function() {
 				}
 				if (this.barData != null){
 					this.barData.destroy();
+				}
+				for (var i = 0; i < this.lvl.length; i++){
+					this.lvl[i].destroy();
 				}
 			}
 			
@@ -352,10 +357,11 @@ window.onload = function() {
 			}
 		},
 		
-		move : function(cursors, map, mapAccess, tileSize, enctrChance){
+		move : function(cursors, map, exits, mapAccess, tileSize, enctrChance){
 			//	Move the player if they are allowed to move
 			//	cursors is the key input from the player
 			//	map is the current map the player is on
+			//	exits has the indices of tiles that allow the player to move to another area
 			//	mapAccess is for accessing the minimap data in the state for storage purposes
 			//	tileSize is the size of the tiles that make up the map
 			//	enctrChance is the chance of running into enemies
@@ -373,7 +379,7 @@ window.onload = function() {
 			var max = 5;
 			
 			
-			//	Divisor must evenly divide the tileSize or else this will not work - can possibly fix by checking if within the range of moveLength
+			//	Divisor must evenly divide the tileSize or else this will not work TODO - can possibly fix by checking if within the range of moveLength
 			var moveLength = tileSize / 20;	//	Finish moving in 20 frames
 			
 			if (!((this.player.x - (tileSize/2)) % tileSize == 0)){
@@ -383,15 +389,14 @@ window.onload = function() {
 				if ((this.player.x - (tileSize/2)) % tileSize == 0){
 					//	Snapped into place after that movement so check for encounter or move to new area
 					this.player.play('still');
-					if (map.getTileWorldXY(this.player.x, this.player.y).index == town){
-						//	On top of the tile that moves the character to town so do so.
-						game.state.start('Town');
-						return false;
-					}
-					if (map.getTileWorldXY(this.player.x, this.player.y).index == forest2){
-						//	On top of the tile that moves the character to forest2 but that does not exist so go to town
-						game.state.start('Town');
-						return false;
+					for (var i = 0; i < exits.length; i++){
+						//	Check if the player has exited through any of the available exits
+						if (map.getTileWorldXY(this.player.x, this.player.y).index == exits[i].index){
+							//	On top of the tile that moves the character to another area
+							this.moveCount = 0;
+							game.state.start(exits[i].loc);
+							return false;
+						}
 					}
 					this.storeNearbyMap(map, mapAccess);
 					if (this.moveCount > min){
@@ -414,15 +419,14 @@ window.onload = function() {
 				if ((this.player.y - (tileSize/2)) % tileSize == 0){
 					//	Snapped into place after that movement so check for encounter
 					this.player.play('still');
-					if (map.getTileWorldXY(this.player.x, this.player.y).index == town){
-						//	On top of the tile that moves the character to town so do so.
-						game.state.start('Town');
-						return false;
-					}
-					if (map.getTileWorldXY(this.player.x, this.player.y).index == forest2){
-						//	On top of the tile that moves the character to forest2 but that does not exist so go to town
-						game.state.start('Town');
-						return false;
+					for (var i = 0; i < exits.length; i++){
+						//	Check if the player has exited through any of the available exits
+						if (map.getTileWorldXY(this.player.x, this.player.y).index == exits[i].index){
+							//	On top of the tile that moves the character to another area
+							this.moveCount = 0;
+							game.state.start(exits[i].loc);
+							return false;
+						}
 					}
 					this.storeNearbyMap(map, mapAccess);
 					if (this.moveCount > min){
@@ -440,7 +444,7 @@ window.onload = function() {
 			}
 			
 			//	Left
-			else if (cursors.left.isDown && this.canMove){
+			else if ((cursors.left.isDown || cursors.a.isDown) && this.canMove){
 				//	Only let the player move when they are allowed
 				
 				//	Get the tile to the left of the player and check the tilemap to see if it is a valid space
@@ -463,7 +467,7 @@ window.onload = function() {
 			}
 			
 			//	Right
-			else if (cursors.right.isDown && this.canMove){
+			else if ((cursors.right.isDown || cursors.d.isDown) && this.canMove){
 				//	Get the tile to the right of the player and check the tilemap to see if it is a valid space
 				var tile = map.getTileWorldXY(this.player.x + tileSize, this.player.y);
 				
@@ -482,7 +486,7 @@ window.onload = function() {
 			}
 			
 			//	Up
-			else if (cursors.up.isDown && this.canMove){
+			else if ((cursors.up.isDown || cursors.w.isDown) && this.canMove){
 				
 				//	Get the tile to the top of the player and check the tilemap to see if it is a valid space
 				var tile = map.getTileWorldXY(this.player.x, this.player.y - tileSize);
@@ -502,7 +506,7 @@ window.onload = function() {
 			}
 			
 			//	Down
-			else if (cursors.down.isDown && this.canMove){
+			else if ((cursors.down.isDown || cursors.s.isDown) && this.canMove){
 				
 				//	Get the tile to the bottom of the player and check the tilemap to see if it is a valid space
 				var tile = map.getTileWorldXY(this.player.x, this.player.y + tileSize);
@@ -719,8 +723,9 @@ window.onload = function() {
 		
 		enemyInput : function(){
 			//	Allow the user to interact with an enemy when attacking.
-			if (this.battling){
-				for (var i = 0; i < this.enemies.length; i++){
+			//if (this.battling){
+			for (var i = 0; i < this.enemies.length; i++){
+				if (this.enemies[i].sprite.input != null){
 					//	Clicking on enemy
 					if (this.enemies[i].sprite.input.justPressed(0, 30)){
 						//	An enemy was chosen so make them receive the damage and make the other enemies unselectable
@@ -771,65 +776,72 @@ window.onload = function() {
 					}
 				}
 			}
+			//}
 		},
 		
 		battleOver : function(){
 			//	Check if the battle is over and go back to dungeon crawling if it is.
-			if (this.battling){
-				var dead = 0;
-				for (var i = 0; i < this.enemies.length; i++){
-					if (this.enemies[i].sprite.alive == false){
-						//	Count the number of dead enemies
-						dead++;
-					}
-				}
-				if (dead == this.enemies.length){
-					if (this.expPage.background == null){
-						for (var i = 0; i < this.enemies.length; i++){
-							//	Go through the enemies and get the experience they gave
-							for (var member = 0; member < shared.state.teamPlace; member++){
-								shared.state.team[member].haveExp += this.enemies[i].giveExp;
-								while (shared.state.team[member].haveExp >= shared.state.team[member].exp){
-									//	The player has gotten enough experience to level up
-									shared.state.team[member].haveExp -= shared.state.team[member].exp;
-									shared.state.team[member].lvl += 1;
-									shared.state.team[member].calculateStats();
-								}
-							}
-						}
-						this.expMenu();
-						
-						//	Destroy the team portraits
-						for (var i = 0; i < shared.state.teamPlace; i++){
-							shared.state.team[i].battleEnd(dungeon.battleSprites[i]);
-						}
-					}
-					else if (game.input.activePointer.justPressed(30)){
-						//	Player has clicked and wants to move on from menu
-						this.expPage.destroy();
-						//	All enemies are dead, battle is over, and player has viewed exp gained
-						this.battleBackground.destroy();
-						//	Destroy the enemies.
-						for (var i = 0; i < this.enemies.length; i++){
-							this.enemies[i].sprite.destroy();
-						}
-						this.enemies = [];
-						//	End battling and allow player to move again
-						this.battling = false;
-						this.canMove = true;
-					}
+			//if (this.battling){
+			var dead = 0;
+			for (var i = 0; i < this.enemies.length; i++){
+				if (this.enemies[i].sprite.alive == false){
+					//	Count the number of dead enemies
+					dead++;
 				}
 			}
+			if (dead == this.enemies.length && dead != 0){
+				//	All the enemies have been beaten
+				if (this.expPage.background == null){
+					var levelup = [];
+					for (var i = 0; i < shared.state.teamPlace; i++){
+						levelup.push(false);
+					}
+					for (var i = 0; i < this.enemies.length; i++){
+						//	Go through the enemies and get the experience they gave
+						for (var member = 0; member < shared.state.teamPlace; member++){
+							shared.state.team[member].haveExp += this.enemies[i].giveExp;
+							while (shared.state.team[member].haveExp >= shared.state.team[member].exp){
+								//	The player has gotten enough experience to level up
+								shared.state.team[member].haveExp -= shared.state.team[member].exp;
+								shared.state.team[member].lvl += 1;
+								shared.state.team[member].calculateStats();
+								levelup[member] = true;
+							}
+						}
+					}
+					this.expMenu(levelup);
+					
+					//	Destroy the team portraits
+					for (var i = 0; i < shared.state.teamPlace; i++){
+						shared.state.team[i].battleEnd(dungeon.battleSprites[i]);
+					}
+				}
+				else if (game.input.activePointer.justPressed(30)){
+					//	Player has clicked and wants to move on from menu
+					this.expPage.destroy();
+					//	All enemies are dead, battle is over, and player has viewed exp gained
+					this.battleBackground.destroy();
+					//	Destroy the enemies.
+					for (var i = 0; i < this.enemies.length; i++){
+						this.enemies[i].sprite.destroy();
+					}
+					this.enemies = [];
+					//	End battling and allow player to move again
+					//this.battling = false;
+					this.canMove = true;
+				}
+			}
+			//}
 		},
 		
-		expMenu : function(){
-			//	Show the player how much exp they gained
+		expMenu : function(levelup){
+			//	Show the player how much exp they gained and whether they leveled up or not
 			var upy = game.camera.y + 100;
 			var downy = game.camera.y + 500;
 			this.expPage.background = shared.openMenu(game.camera.x, upy, downy, 'expPage', 0, 0, 0, { menuButtons : [], buttonFunctions : []});
 			//	Make the bars 400 width
 			
-			var height = 50;
+			var height = 60;
 			var ybuffer = 30;
 			var mul = shared.state.teamPlace;
 			var overallHeight = height * mul;
@@ -845,13 +857,21 @@ window.onload = function() {
 				var style = { font: "25px Verdana", fill: "#FFFFFF"};
 				this.expPage.nameData[i] = game.add.text(xplace, yplace, shared.state.team[i].name, style);
 				//	Experience
-				var height = 25;
+				var height = 35;
 				var width = 400;
 				var percentExp = shared.state.team[i].haveExp / shared.state.team[i].exp;
 				this.expPage.barData.beginFill(0x1546C0, 1);
 				this.expPage.barData.drawRect(xplace, yplace + height, width, height);
 				this.expPage.barData.beginFill(0x5EE2C5, 1);
 				this.expPage.barData.drawRect(xplace, yplace + height, width * percentExp, height);
+				//	Level up
+				style = { font: "25px Verdana", fill: "#FFFFFF", align: "right"};
+				this.expPage.lvl[i] = game.add.text(xplace, yplace, "Lvl " + shared.state.team[i].lvl, style);
+				if (levelup[i]){
+					//	This character leveled up so represent that
+					this.expPage.lvl[i].text = "↑↑" + this.expPage.lvl[i].text + "↑↑";
+				}
+				this.expPage.lvl[i].x += width - this.expPage.lvl[i].width;
 				yplace += height + ybuffer;
 			}
 		}
