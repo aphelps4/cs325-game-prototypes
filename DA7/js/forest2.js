@@ -1,6 +1,6 @@
 "use strict";
 
-GameStates.makeForest1 = function( game, shared, dungeon ) {
+GameStates.makeForest2 = function( game, shared, dungeon ) {
     // Create your own variables.
     var map = null;
 	var tileset = null;
@@ -17,17 +17,15 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 		
 		amtMin : 1,
 		
-		amtMax : 2,
+		amtMax : 3,
 		
-		prob : [60, 40]
+		prob : [50, 30, 20]
 		
 	};
-	//	TODO find a way to have max increase with player level for the first floor
-	var maxCap = 3;
 	var rndmLvlData = {
 		amtMin : 1,
 		
-		amtMax : 1,
+		amtMax : 3,
 		
 		prob : [50, 30, 20]
 		
@@ -176,17 +174,6 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
             
             if (dungeon.move(cursors, map, exits, mapAccess, tileSize, enctrChance)){
 				//	Random encounter occurred
-				/*if (shared.state.team[0].lvl > rndmLvlData.amtMax && rndmLvlData.amtMax != maxCap){
-					//	Increase the max level for enemies as the player levels up
-					if (shared.state.team[0].lvl < maxCap){
-						//	Player level is still below maxCap so set max level to player level
-						rndmLvlData.amtMax = shared.state.team[0].lvl;
-					}
-					else{
-						//	Player level is greater than or equal to maxCap so set amtMax to its highest value
-						rndmLvlData.amtMax = maxCap;
-					}
-				}*/
 				dungeon.startBattle(rndmAmtData, rndmLvlData, plcmntData, availableEnemies);
 			}
 			

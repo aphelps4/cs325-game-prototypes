@@ -29,6 +29,8 @@ window.onload = function() {
 					sprite : null,
 					frame : null,
 					statDisplay : null
+					//healthBar : null,
+					//healthLeft : null
 				}
 				portrait.background = game.add.button(x, y, 'portraitBackground', function(){dungeon.openFightMenu(place)});
 				portrait.sprite = game.add.sprite(x, y, 'portraitWolf', 0);
@@ -37,6 +39,12 @@ window.onload = function() {
 				var height = 20;
 				var percentHealth = this.healthLeft / this.hp;
 				var frameBuffer = 4;
+				/*var statDisplay = game.add.graphics(0,0);
+				statDisplay.beginFill(0x1546C0, 1);
+				portrait.healthBar = statDisplay.drawRect(x + frameBuffer, (y + portrait.frame.height) - height, portrait.frame.width - (2 * frameBuffer), height - frameBuffer);
+				statDisplay.beginFill(0x00DB20, 1);
+				//	TODO use shared variables from healthbar instead of calculating them again
+				portrait.healthLeft = statDisplay.drawRect(x + frameBuffer, (y + portrait.frame.height) - height, (portrait.frame.width - (2 * frameBuffer)) * percentHealth, height - frameBuffer);*/
 				portrait.statDisplay = game.add.graphics(0,0);
 				portrait.statDisplay.beginFill(0x1546C0, 1);
 				portrait.statDisplay.drawRect(x + frameBuffer, (y + portrait.frame.height) - height, portrait.frame.width - (2 * frameBuffer), height - frameBuffer);
@@ -48,6 +56,8 @@ window.onload = function() {
 				portrait.background.destroy();
 				portrait.sprite.destroy();
 				portrait.frame.destroy();
+				//portrait.healthBar.destroy();
+				//portrait.healthLeft.destroy();
 				portrait.statDisplay.destroy();
 			},
 			calculateStats(){
@@ -96,6 +106,7 @@ window.onload = function() {
 				var height = 20;
 				var percentHealth = this.healthLeft / this.hp;
 				var frameBuffer = 4;
+				//	TODO update this like wolf
 				portrait.statDisplay = game.add.graphics(0,0);
 				portrait.statDisplay.beginFill(0x1546C0, 1);
 				portrait.statDisplay.drawRect(x + frameBuffer, (y + portrait.frame.height) - height, portrait.frame.width - (2 * frameBuffer), height - frameBuffer);
@@ -690,9 +701,10 @@ window.onload = function() {
 			overallWidth = overallWidth + (buffer * (enemyAmount - 1));
 			var xplace = (this.battleBackground.x) - (overallWidth/2);	//	Middle of page then up half the overall height
 			for (var i = 0; i < enemyAmount; i++){
-				//	Randomly create an enemy from available encounters and place it
+				//	Randomly create an enemy from available encounters with random level from range and place it
 				var choice = game.rnd.between(0, (availableEnemies.length - 1));
-				var enemy = availableEnemies[choice](1);
+				var lvl = game.rnd.between(rndmLvlData.amtMin, rndmLvlData.amtMax);
+				var enemy = availableEnemies[choice](lvl);
 				enemy.sprite.x = xplace;
 				if (i % 2 == 0){
 					//	Place the enemy in the back if they are even
@@ -734,14 +746,7 @@ window.onload = function() {
 						//	TODO - may want to move stuff below into a new function that checks for all memebers having an action
 						if (this.teamAttacks.length >= shared.state.teamPlace){
 							//	An action has been chosen for all the teammembers
-							for (var atkCnt = 0; atkCnt < this.teamAttacks.length; atkCnt++){
-								var attack = this.teamAttacks.pop(atkCnt);
-								this.enemies[attack.defender].healthLeft -= Math.pow(shared.state.team[attack.attacker].str, 2)/this.enemies[attack.defender].def;
-								if (this.enemies[i].healthLeft <= 0){
-									//	Enemy died so get rid of them
-									this.enemies[i].sprite.kill();
-								}
-							}
+							dungeon.turnEnd();
 						}
 						if (this.enemies[i].statDisplay != null){
 							this.enemies[i].statDisplay.destroy();
@@ -777,6 +782,44 @@ window.onload = function() {
 				}
 			}
 			//}
+		},
+		
+		turnEnd : function(){
+			//	Player has chosen all their actions for this turn so play this turn
+			//	TODO - make actions go based on speed of attacker and find a way to handle more actions besides attack
+			//	Team attacks
+			for (var atkCnt = 0; atkCnt < this.teamAttacks.length; atkCnt++){
+				var attack = this.teamAttacks.pop(atkCnt);
+				this.enemies[attack.defender].healthLeft -= Math.pow(shared.state.team[attack.attacker].str, 2)/this.enemies[attack.defender].def;
+				if (this.enemies[attack.defender].healthLeft <= 0){
+					//	Enemy died so get rid of them
+					this.enemies[attack.defender].sprite.kill();
+				}
+			}
+			//	Enemy attacks
+			//	TODO - gonna generate the enemy attacks before executing any attacks but just make them attack the leader for now
+			for (var atkCnt = 0; atkCnt < this.enemies.length; atkCnt++){
+				if (this.enemies[atkCnt].sprite.alive){
+					//	Only have an enemy attack if they are alive
+					shared.state.team[0].healthLeft -= Math.pow(this.enemies[atkCnt].str, 2)/shared.state.team[0].def;
+					if (shared.state.team[0].healthLeft <= 0){
+						//	Wolf died so reload
+						location.reload();
+					}
+					var height = 20;
+					var percentHealth = shared.state.team[0].healthLeft/shared.state.team[0].hp;
+					var frameBuffer = 4;
+					var x = dungeon.battleSprites[0].frame.x;
+					var y = dungeon.battleSprites[0].frame.y;
+					//	Destroy and redraw the healthbar
+					dungeon.battleSprites[0].statDisplay.destroy();
+					dungeon.battleSprites[0].statDisplay = game.add.graphics(0,0);
+					dungeon.battleSprites[0].statDisplay.beginFill(0x1546C0, 1);
+					dungeon.battleSprites[0].statDisplay.drawRect(x + frameBuffer, (y + dungeon.battleSprites[0].frame.height) - height, dungeon.battleSprites[0].frame.width - (2 * frameBuffer), height - frameBuffer);
+					dungeon.battleSprites[0].statDisplay.beginFill(0x00DB20, 1);
+					dungeon.battleSprites[0].statDisplay.drawRect(x + frameBuffer, (y + dungeon.battleSprites[0].frame.height) - height, (dungeon.battleSprites[0].frame.width - (2 * frameBuffer)) * percentHealth, height - frameBuffer);
+				}
+			}
 		},
 		
 		battleOver : function(){
