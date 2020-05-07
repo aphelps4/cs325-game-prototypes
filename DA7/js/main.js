@@ -169,6 +169,10 @@ window.onload = function() {
 				{
 					name : 'forest1',
 					data : []
+				},
+				{
+					name : 'forest2',
+					data : []
 				}
 			
 			]
@@ -555,10 +559,11 @@ window.onload = function() {
 			shared.state.maps[mapAccess].data[tileStore.x][tileStore.y] = tileStore.index + 1;
 		},
 		
-		viewMiniMap : function(map, tileSize, miniTileSize, mapAccess){
+		viewMiniMap : function(map, tileSize, miniTiles, miniTileSize, mapAccess){
 			//	Allow the player to view where they have been on the current map by pressing the key E or SHIFT
 			//	map is the big map for accessing the current tile - TODO calculate current tile without map
 			//	tileSize is for the tiles the player walks on while miniTileSize is for the mini maptiles
+			//	miniTiles is for accessing the mini tiles to show
 			//	mapAccess is to get the data for the current map
 			var key1 = game.input.keyboard.addKey(Phaser.Keyboard.E);
 			var key2 = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
@@ -583,7 +588,7 @@ window.onload = function() {
 						for (var y = 0; y < ysize; y++){
 							for (var x = 0; x < xsize; x++){
 								//this.miniMap.mapTiles.addChild(game.add.sprite(xplace, yplace, 'forest1MiniMapTiles', 1));
-								game.add.sprite(xplace, yplace, 'forest1MiniMapTiles', shared.state.maps[mapAccess].data[x][y], this.miniMap.mapTiles);
+								game.add.sprite(xplace, yplace, miniTiles, shared.state.maps[mapAccess].data[x][y], this.miniMap.mapTiles);
 								xplace += miniTileSize;
 							}
 							xplace = xstart;
@@ -926,6 +931,7 @@ window.onload = function() {
 	game.state.add( 'Town', GameStates.makeTown( game, shared ) );
 	game.state.add( 'Game', GameStates.makeGame( game, shared ) );
 	game.state.add( 'Forest1', GameStates.makeForest1( game, shared, dungeon ) );
+	game.state.add( 'Forest2', GameStates.makeForest2( game, shared, dungeon ) );
 
 	//	Now start the Boot state.
 	game.state.start('Boot');

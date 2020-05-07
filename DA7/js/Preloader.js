@@ -40,9 +40,15 @@ GameStates.makePreloader = function( game ) {
 			
 			//	Dungeon assets
 			game.load.spritesheet('overWorldWolf', 'assets/overWorldWolf.png', 156, 156);
-			game.load.image('forest1Tiles', 'assets/forest1Tiles.png');
+			//	Map layouts
 			game.load.tilemap('forest1Map', 'assets/forest1Map.csv', null, Phaser.Tilemap.CSV);
+			game.load.tilemap('forest2Map', 'assets/forest2Map.csv', null, Phaser.Tilemap.CSV);
+			//	Map tiles
+			game.load.image('forest1Tiles', 'assets/forest1Tiles.png');
+			game.load.image('forest2Tiles', 'assets/forest2Tiles.png');
+			//	Mini map tiles
 			game.load.spritesheet('forest1MiniMapTiles', 'assets/forest1MiniMapTiles.png', 40, 40);
+			game.load.spritesheet('forest2MiniMapTiles', 'assets/forest2MiniMapTiles.png', 40, 40);
 			game.load.image('playerMiniMapRep', 'assets/playerMiniMapRep.png');
 			
 			//	Battle assets

@@ -2,16 +2,19 @@
 
 GameStates.makeForest2 = function( game, shared, dungeon ) {
     // Create your own variables.
+	var name = 'forest2';
+	
     var map = null;
 	var tileset = null;
 	var layer = null;
 	var tileSize = 200;
-	var exits = [{index: 3, loc: 'Town'}, {index: 5, loc: 'Town'}];
+	var exits = [{index: 3, loc: 'Forest1'}];
 	
 	var mapAccess = -1;
+	var miniTilesName = 'forest2MiniMapTiles';
 	var miniTileSize = 40;
 	
-	var enctrChance = 20;
+	var enctrChance = 40;
 	var enemyList = [];
 	var rndmAmtData = {
 		
@@ -116,22 +119,24 @@ GameStates.makeForest2 = function( game, shared, dungeon ) {
 			}
 			
 			//	Create dungeon for player to move through
-			map = game.add.tilemap('forest1Map', tileSize, tileSize);
-			tileset = map.addTilesetImage('forest1Tiles', null, tileSize, tileSize);
+			map = game.add.tilemap('forest2Map', tileSize, tileSize);
+			tileset = map.addTilesetImage('forest2Tiles', null, tileSize, tileSize);
 			layer = map.createLayer(0);
 			layer.resizeWorld();
 			
 			//	Set up map data for this floor
 			for (var i = 0; i < shared.state.maps.length; i++){
 				//	Loop through player maps and find the one for this floor
-				if (shared.state.maps[i].name == 'forest1'){
+				if (shared.state.maps[i].name == name){
 					//	Found the map, store the number
 					mapAccess = i;
 				}
-			}
-			if (mapAccess == -1){
-				//	Failed to find the map data
-				console.log('Map data not found');
+				else{
+					//	Failed to find map so probably an old save state
+					shared.state.maps.push({name : name, data : []});
+					//	Now store the access number of the map we just added
+					mapAccess = shared.state.maps.length - 1;
+				}
 			}
 			if (shared.state.maps[mapAccess].data.length == 0){
 				//	The maps data has not been initialized yet
@@ -146,7 +151,7 @@ GameStates.makeForest2 = function( game, shared, dungeon ) {
 				}
 			}
 			
-			dungeon.initializePlayer(900, 2700, 'overWorldWolf');
+			dungeon.initializePlayer(1100, 2700, 'overWorldWolf');
 			dungeon.storeNearbyMap(map, mapAccess);
 			dungeon.player.height = tileSize;
 			dungeon.player.width = tileSize;
@@ -177,7 +182,7 @@ GameStates.makeForest2 = function( game, shared, dungeon ) {
 				dungeon.startBattle(rndmAmtData, rndmLvlData, plcmntData, availableEnemies);
 			}
 			
-			dungeon.viewMiniMap(map, tileSize, miniTileSize, mapAccess);
+			dungeon.viewMiniMap(map, tileSize, miniTilesName, miniTileSize, mapAccess);
 			
 			dungeon.moveTimer++;
         }

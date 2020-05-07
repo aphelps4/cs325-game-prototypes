@@ -6,9 +6,10 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 	var tileset = null;
 	var layer = null;
 	var tileSize = 200;
-	var exits = [{index: 3, loc: 'Town'}, {index: 5, loc: 'Town'}];
+	var exits = [{index: 3, loc: 'Town'}, {index: 5, loc: 'Forest2'}];
 	
 	var mapAccess = -1;
+	var miniTilesName = 'forest1MiniMapTiles';
 	var miniTileSize = 40;
 	
 	var enctrChance = 20;
@@ -190,9 +191,9 @@ GameStates.makeForest1 = function( game, shared, dungeon ) {
 				dungeon.startBattle(rndmAmtData, rndmLvlData, plcmntData, availableEnemies);
 			}
 			
-			dungeon.viewMiniMap(map, tileSize, miniTileSize, mapAccess);
+			dungeon.viewMiniMap(map, tileSize, miniTilesName, miniTileSize, mapAccess);
 			
-			dungeon.moveTimer++;
+			dungeon.moveTimer++;	//	TODO figure out if it is safe to remove moveTimer in dungeon
         }
     };
 };
