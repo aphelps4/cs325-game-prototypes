@@ -249,6 +249,12 @@ window.onload = function() {
 				yplace += buttonHeight + ybuffer;
 			}
 			return menu;
+		},
+		
+		startplace : {
+			x : 0,
+			y : 0,
+			angle : 0
 		}
 		
 	};
@@ -409,6 +415,9 @@ window.onload = function() {
 						if (map.getTileWorldXY(this.player.x, this.player.y).index == exits[i].index){
 							//	On top of the tile that moves the character to another area
 							this.moveCount = 0;
+							shared.startplace.x = exits[i].x;
+							shared.startplace.y = exits[i].y;
+							shared.startplace.angle = exits[i].angle;
 							game.state.start(exits[i].loc);
 							return false;
 						}
@@ -439,6 +448,9 @@ window.onload = function() {
 						if (map.getTileWorldXY(this.player.x, this.player.y).index == exits[i].index){
 							//	On top of the tile that moves the character to another area
 							this.moveCount = 0;
+							shared.startplace.x = exits[i].x;
+							shared.startplace.y = exits[i].y;
+							shared.startplace.angle = exits[i].angle;
 							game.state.start(exits[i].loc);
 							return false;
 						}

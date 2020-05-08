@@ -8,7 +8,7 @@ GameStates.makeForest2 = function( game, shared, dungeon ) {
 	var tileset = null;
 	var layer = null;
 	var tileSize = 200;
-	var exits = [{index: 3, loc: 'Forest1'}];
+	var exits = [{index: 3, loc: 'Forest1', x:1100 , y: 300, angle: 90}];
 	
 	var mapAccess = -1;
 	var miniTilesName = 'forest2MiniMapTiles';
@@ -151,11 +151,11 @@ GameStates.makeForest2 = function( game, shared, dungeon ) {
 				}
 			}
 			
-			dungeon.initializePlayer(1100, 2700, 'overWorldWolf');
+			dungeon.initializePlayer(shared.startplace.x, shared.startplace.y, 'overWorldWolf');
 			dungeon.storeNearbyMap(map, mapAccess);
 			dungeon.player.height = tileSize;
 			dungeon.player.width = tileSize;
-			dungeon.player.angle = -90;
+			dungeon.player.angle = shared.startplace.angle;
 			dungeon.player.anchor.setTo(0.5, 0.5);
 			
 			game.camera.follow(dungeon.player);

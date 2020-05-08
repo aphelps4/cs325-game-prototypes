@@ -41,6 +41,9 @@ GameStates.makeTown = function( game, shared ) {
 				music = game.add.audio('menuMusic');
 				music.loop = true;
 				music.play();
+				shared.startplace.x = 900;
+				shared.startplace.y = 2700;
+				shared.startplace.angle = -90;
 				game.state.start('Forest1');
 			}
 		
